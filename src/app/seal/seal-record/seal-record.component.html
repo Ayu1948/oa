@@ -1,0 +1,39 @@
+<div class="seal-record">
+    <div class="table-operations">
+        <button nz-button (click)="sort('id','descend')">序号排序</button>
+        <button nz-button (click)="resetFilters()">清除过滤</button>
+        <button nz-button (click)="resetSortAndFilters()">清除过滤和排序</button>
+    </div>
+    <nz-table #nzTable [nzData]="listOfData">
+        <thead>
+            <tr>
+                <th nzShowExpand></th>
+                <th>序号</th>
+                <th>用章类型</th>
+                <th>申请人</th>
+                <th>负责人</th>
+                <th>审核人</th>
+                <th>申请时间</th>
+                <th>申请状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-data [ngForOf]="nzTable.data">
+                <tr>
+                    <td nzShowExpand [(nzExpand)]="mapOfExpandData[data.id]"></td>
+                    <td>{{data.id}}</td>
+                    <td>{{data.type}}</td>
+                    <td>{{data.propser}}</td>
+                    <td>{{data.pic}}</td>
+                    <td>{{data.auditor}}</td>
+                    <td>{{data.time}}</td>
+                    <td>{{data.status}}</td>
+                </tr>
+                <tr [nzExpand]="mapOfExpandData[data.id]">
+                    <td></td>
+                    <td colspan="7">{{data.description}}</td>
+                </tr>
+            </ng-template>
+        </tbody>
+    </nz-table>
+</div>
