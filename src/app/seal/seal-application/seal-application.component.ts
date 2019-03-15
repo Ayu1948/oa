@@ -65,8 +65,10 @@ export class SealApplicationComponent implements OnInit {
         private route: ActivatedRoute,
         private sealService: SealService) {
         this.validateForm = this.fb.group({
+            id: ['', [Validators.required]],
             type: ['', [Validators.required]],
             pic: ['', [Validators.required]],
+            auditor: ['', [Validators.required]],
             propser: ['', [Validators.required], [this.userNameAsyncValidator]],
             description: ['', [Validators.required]]
         });
@@ -78,13 +80,16 @@ export class SealApplicationComponent implements OnInit {
         //     this.validateForm.controls[key].markAsDirty();
         //     this.validateForm.controls[key].updateValueAndValidity();
         // }
-        this.sealService.updateSeal(value);
+        this.sealService.updateSeal(value)
+            .subscribe(() => this.getSealData(value.id));
         console.log(value);
-    };
-    
-    getSealData(): void {
-        const id = +this.route.snapshot.paramMap.get('id');
-        // this.
+    }
+    closeModel(): void {
+        console.log('close');
+    }
+    getSealData(id: number): void {
+        this.sealService.getSeal(id)
+            .subscribe(seal => this.seal = seal);
     }
     ngOnInit() {
     }

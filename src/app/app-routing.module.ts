@@ -6,18 +6,18 @@ import { SealRecordComponent } from './seal/seal-record/seal-record.component';
 
 const routes: Routes = [
     {
-        path: 'seal-application',
-        component: SealApplicationComponent,
-        data: {
-            breadcrumb: '/ seal-application'
-        }
-    }, {
-        path: 'seal-application/:id',
-        component: SealApplicationComponent,
-        data: {
-            breadcrumb: '/ seal-application'
-        }
-    }, {
+    //     path: 'seal-application',
+    //     component: SealApplicationComponent,
+    //     data: {
+    //         breadcrumb: '/ seal-application'
+    //     }
+    // }, {
+    //     path: 'seal-application/:id',
+    //     component: SealApplicationComponent,
+    //     data: {
+    //         breadcrumb: '/ seal-application'
+    //     }
+    // }, {
         path: 'seal-record',
         component: SealRecordComponent,
         data: {

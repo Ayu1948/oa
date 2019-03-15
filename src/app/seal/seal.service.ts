@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Seal } from './seal';
-import { SealList } from './seal-data';
+// import { SealList } from './seal-data';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import { MessageService } from '../message.service';
+import { MessageService } from '../messages/message.service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,9 +17,35 @@ export class SealService {
     private sealListUrl = 'api/seal-record';
     constructor(private http: HttpClient, private messageService: MessageService) { }
 
-    getSealList(): Seal[] {
-        return SealList;
+    getSeal(id: number): Observable<Seal> {
+        const url = `${this.sealListUrl}`;
+        return this.http.get<Seal>(url).pipe(
+            tap(_ => this.log(`fetched seal id=${id}`)),
+            catchError(this.handleError<Seal>(`getSeal id=${id}`))
+        );
     }
+    getSealList(): Observable<Seal[]> {
+        return this.http.get<Seal[]>(this.sealListUrl)
+            .pipe(
+                // 使用 tap 来记录各种操作
+                // 查看 Observable 中的值，使用那些值做一些事情，并且把它们传出来
+                // 这种 tap 回调不会改变这些值本身
+                tap(_ => this.log('fetched sealList')),
+                catchError(this.handleError<Seal[]>('getSealList', []))
+            );
+    }
+    // getSealNo404<Data>(id: number): Observable<Seal> {
+    //     const url = `${this.sealListUrl}`;
+    //     return this.http.get<Seal[]>(url)
+    //         .pipe(
+    //             map(sealList => sealList[0]), // returns a {0|1} element array
+    //             tap(h => {
+    //                 const outcome = h ? `fetched` : `did not find`;
+    //                 this.log(`${outcome} seal id=${id}`);
+    //             }),
+    //             catchError(this.handleError<Seal>(`getSeal id=${id}`))
+    //         );
+    // }
     updateSeal(seal: Seal): Observable<any> {
         return this.http.put(this.sealListUrl, seal, httpOptions)
             .pipe(

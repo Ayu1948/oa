@@ -5,12 +5,16 @@ import { AppComponent } from './app.component';
 import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { AppRoutingModule } from './app-routing.module';
 import { SealApplicationComponent } from './seal/seal-application/seal-application.component';
 import { SealRecordComponent } from './seal/seal-record/seal-record.component';
+import { InMemoryDataService } from './in-memory-data.service';
+import { MessagesComponent } from './messages/messages.component';
+
 
 registerLocaleData(en);
 
@@ -18,7 +22,8 @@ registerLocaleData(en);
   declarations: [
     AppComponent,
     SealApplicationComponent,
-    SealRecordComponent
+    SealRecordComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +32,10 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientInMemoryWebApiModule.forRoot(
+        InMemoryDataService, { dataEncapsulation: false }
+    )
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

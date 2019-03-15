@@ -10,12 +10,20 @@ import { SealService } from '../seal.service';
 })
 export class SealRecordComponent implements OnInit {
     mapOfExpandData = {};
-    listOfData: Seal[];
-    constructor(private sealList: SealService) { }
+    sealList: Seal[];
+    isVisible = false;
+    selectedSeal: Seal;
+    constructor(private sealService: SealService) { }
     getSealList(): void {
-        this.listOfData = this.sealList.getSealList();
+        // this.sealList = this.sealList.getSealList();
+        this.sealService.getSealList()
+            .subscribe(sealList => {
+                this.sealList = sealList;
+                console.log(sealList);
+            });
+        console.log(this.sealService.getSealList());
     }
-    // listOfData = [
+    // sealList = [
     //     {
     //         id: 1,
     //         propser: '郑郑',
@@ -76,11 +84,9 @@ export class SealRecordComponent implements OnInit {
     //     }
     //     this.search(this.listOfSearchName, this.listOfSearchAddress)
     // }
-    isVisible = false;
-    selectedSeal: Seal;
-    selectedSeal2: Seal;
     showApplyModal(data) {
         this.isVisible = true;
+        this.selectedSeal = undefined;  // 重置窗口
         if (data !== undefined) {
             console.log(data);
             this.selectedSeal = data;
