@@ -12,7 +12,7 @@ import en from '@angular/common/locales/en';
 import { AppRoutingModule } from './app-routing.module';
 import { SealApplicationComponent } from './seal/seal-application/seal-application.component';
 import { SealRecordComponent } from './seal/seal-record/seal-record.component';
-import { InMemoryDataService } from './in-memory-data.service';
+// import { InMemoryDataService } from './in-memory-data.service';
 import { MessagesComponent } from './messages/messages.component';
 
 
@@ -33,9 +33,9 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientInMemoryWebApiModule.forRoot(
-        InMemoryDataService, { dataEncapsulation: false }
-    )
+    // HttpClientInMemoryWebApiModule.forRoot(
+    //     InMemoryDataService, { dataEncapsulation: false }
+    // )
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

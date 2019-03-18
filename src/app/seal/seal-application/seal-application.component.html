@@ -1,6 +1,6 @@
 <div class="seal-application">
     <!-- 编辑申请 -->
-    <form *ngIf="seal; else elseBlock" nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
+    <!-- <form *ngIf="seal; else elseBlock" nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
         (ngSubmit)="submitForm($event,validateForm.value)">
         <nz-form-item class="hidden-item">
             <nz-form-label nzRequired></nz-form-label>
@@ -24,7 +24,7 @@
                     <label nz-radio nzValue="3">法人章</label>
                     <label nz-radio nzValue="4">业务专用章</label>
                     <label nz-radio nzValue="0">其他</label>
-                </nz-radio-group> -->
+                </nz-radio-group> --
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -81,21 +81,27 @@
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
+        <nz-form-item class="hidden-item">
+            <nz-form-label nzRequired></nz-form-label>
+            <nz-form-control>
+                <input nz-input formControlName="time" [(ngModel)]="seal.time">
+            </nz-form-control>
+        </nz-form-item>
         <nz-form-item nzType="flex" nzJustify="center">
             <nz-form-control>
                 <button nz-button nzType="primary" [disabled]="!validateForm.valid" class="sumbitBtn">提交</button>
                 <button nz-button (click)="resetForm($event)">重置</button>
             </nz-form-control>
         </nz-form-item>
-    </form>
+    </form> -->
     <!-- 申请模块（没有数据的时候） -->
-    <ng-template #elseBlock>
+    <!-- <ng-template> -->
         <form class="elseForm" nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
             (ngSubmit)="submitForm($event,validateForm.value)">
             <nz-form-item>
                 <nz-form-label nzRequired>111用章类型</nz-form-label>
                 <nz-form-control>
-                    <nz-radio-group formControlName="type" [(ngModel)]="elseBlock.type" [nzButtonStyle]="'solid'">
+                    <nz-radio-group formControlName="type" [(ngModel)]="radioType" [nzButtonStyle]="'solid'">
                         <label nz-radio-button nzValue="公司章">公司章</label>
                         <label nz-radio-button nzValue="合同章">合同章</label>
                         <label nz-radio-button nzValue="法人章">法人章</label>
@@ -157,6 +163,12 @@
                     </nz-select>
                 </nz-form-control>
             </nz-form-item> -->
+        <nz-form-item class="hidden-item">
+            <nz-form-label nzRequired></nz-form-label>
+            <nz-form-control>
+                <input nz-input formControlName="time" [(ngModel)]="timeValue">
+            </nz-form-control>
+        </nz-form-item>
             <nz-form-item nzType="flex" nzJustify="center">
                 <nz-form-control>
                     <button nz-button nzType="primary" [disabled]="!validateForm.valid" class="sumbitBtn">提交</button>
@@ -164,5 +176,5 @@
                 </nz-form-control>
             </nz-form-item>
         </form>
-    </ng-template>
+    <!-- </ng-template> -->
 </div>

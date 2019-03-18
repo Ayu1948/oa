@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
@@ -10,6 +10,7 @@ import { Observable, Observer } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Seal } from '../seal';
 import { SealService } from '../seal.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-seal-application',
@@ -18,19 +19,24 @@ import { SealService } from '../seal.service';
 })
 export class SealApplicationComponent implements OnInit {
     @Input() seal: Seal;
+    @Output() closeM: EventEmitter<any> = new EventEmitter();
     // propserValue;
     radioValue;
-    picValue = 0;
+    radioType = '公司章';
+    picValue = 'aaa';
     // auditorValue = 0;
     ngDescription = '';
     ngPropser = '';
+    timeValue;
     // constructor() { }
+    dateNow = new Date();
 
     validateForm: FormGroup;
 
     resetForm(e: MouseEvent): void {
         e.preventDefault();
         this.validateForm.reset();
+        // tslint:disable-next-line: forin
         for (const key in this.validateForm.controls) {
             this.validateForm.controls[key].markAsPristine();
             this.validateForm.controls[key].updateValueAndValidity();
@@ -62,34 +68,33 @@ export class SealApplicationComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private datePipe: DatePipe,
         private route: ActivatedRoute,
         private sealService: SealService) {
         this.validateForm = this.fb.group({
-            id: ['', [Validators.required]],
+            id: [''],
             type: ['', [Validators.required]],
-            pic: ['', [Validators.required]],
-            auditor: ['', [Validators.required]],
+            pic: [''],
+            auditor: [''],
             propser: ['', [Validators.required], [this.userNameAsyncValidator]],
-            description: ['', [Validators.required]]
+            description: ['', [Validators.required],],
+            time: [this.datePipe.transform(this.dateNow, 'yyyy-mm-dd')]
         });
     }
 
     submitForm = ($event, value) => {
         $event.preventDefault();
-        // for (const key in this.validateForm.controls) {
-        //     this.validateForm.controls[key].markAsDirty();
-        //     this.validateForm.controls[key].updateValueAndValidity();
-        // }
-        this.sealService.updateSeal(value)
-            .subscribe(() => this.getSealData(value.id));
+        // tslint:disable-next-line: forin
+        for (const key in this.validateForm.controls) {
+            if (key === 'time') {
+                value.time = this.datePipe.transform(this.dateNow, 'yyyy-mm-dd');
+            }
+            console.log(this.validateForm.controls[key].updateValueAndValidity())
+            this.validateForm.controls[key].markAsDirty();
+            this.validateForm.controls[key].updateValueAndValidity();
+        }
+        this.closeM.emit(value);
         console.log(value);
-    }
-    closeModel(): void {
-        console.log('close');
-    }
-    getSealData(id: number): void {
-        this.sealService.getSeal(id)
-            .subscribe(seal => this.seal = seal);
     }
     ngOnInit() {
     }

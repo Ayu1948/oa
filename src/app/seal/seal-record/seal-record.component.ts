@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { Seal } from '../seal';
 import { SealService } from '../seal.service';
+import { NzMessageService } from 'ng-zorro-antd';
+import { SealApplicationComponent } from '../seal-application/seal-application.component';
 
 @Component({
     selector: 'app-seal-record',
@@ -9,19 +11,24 @@ import { SealService } from '../seal.service';
     styleUrls: ['./seal-record.component.less']
 })
 export class SealRecordComponent implements OnInit {
+    @ViewChild('applyM') applyM: SealApplicationComponent;
     mapOfExpandData = {};
+    editCache: { [key: string]: any } = {};
     sealList: Seal[];
     isVisible = false;
     selectedSeal: Seal;
-    constructor(private sealService: SealService) { }
+    resetMB = false;
+    delSealTipTitle = '确认撤销这条申请吗?';
+    canEditTipTitle = '确认取消编辑吗?';
+    constructor(private nzMessageService: NzMessageService, private sealService: SealService) { }
     getSealList(): void {
-        // this.sealList = this.sealList.getSealList();
-        this.sealService.getSealList()
-            .subscribe(sealList => {
-                this.sealList = sealList;
-                console.log(sealList);
-            });
-        console.log(this.sealService.getSealList());
+        this.sealList = this.sealService.getSealList();
+        // this.sealService.getSealList()
+        //     .subscribe(sealList => {
+        //         this.sealList = sealList;
+        //         console.log(sealList);
+        //     });
+        // console.log(this.sealService.getSealList());
     }
     // sealList = [
     //     {
@@ -84,13 +91,65 @@ export class SealRecordComponent implements OnInit {
     //     }
     //     this.search(this.listOfSearchName, this.listOfSearchAddress)
     // }
-    showApplyModal(data) {
-        this.isVisible = true;
+
+    showApplyModal(e, data) {
         this.selectedSeal = undefined;  // 重置窗口
         if (data !== undefined) {
             console.log(data);
             this.selectedSeal = data;
         }
+        this.showModal();
+    }
+    startEdit(id): void {
+        this.editCache[id].edit = true;
+        this.sealList.forEach(item => {
+            if (item.id === id) {
+                this.mapOfExpandData[id] = true;
+            }
+        });
+    }
+    cancelEdit(id): void {
+        const index = this.sealList.findIndex(item => item.id === id);
+        this.editCache[id] = {
+            data: { ...this.sealList[index] },
+            edit: false
+        };
+    }
+    saveEdit(id): void {
+        // 编辑按钮
+        const index = this.sealList.findIndex(item => item.id === id);
+        Object.assign(this.sealList[index], this.editCache[id].data);
+        this.editCache[id].edit = false;
+
+    }
+    updateEditCache(): void {
+        this.sealList.forEach(item => {
+            this.editCache[item.id] = {
+                edit: false,
+                data: { ...item }
+            };
+        });
+    }
+
+    delSeal(id) {
+        // 撤销申请
+        this.sealList.forEach(element => {
+            if (element.id === id) {
+                this.sealList = this.sealList.filter(d => d.id !== id);
+                this.nzMessageService.info('删除成功');
+            }
+        });
+    }
+    cancelDelSeal() {
+        this.nzMessageService.info('取消成功');
+    }
+
+    addSeal(data) {
+        this.sealList = [...this.sealList, data];
+        this.handleCancel();
+    }
+    showModal(): void {
+        this.isVisible = true;
     }
     handleOk(): void {
         console.log('click ok');
@@ -102,6 +161,7 @@ export class SealRecordComponent implements OnInit {
     }
     ngOnInit() {
         this.getSealList();
+        this.updateEditCache();
     }
 
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Seal } from './seal';
-// import { SealList } from './seal-data';
-import { Observable, of } from 'rxjs';
+import { SealList } from './seal-data';
+import { Observable, of, observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from '../messages/message.service';
@@ -14,26 +14,33 @@ const httpOptions = {
     providedIn: 'root'
 })
 export class SealService {
-    private sealListUrl = 'api/seal-record';
-    constructor(private http: HttpClient, private messageService: MessageService) { }
+    seallog;
+    private sealListUrl = 'http://localhost:8000/api/test.json';
+    constructor(private messageService: MessageService) { }
+    // constructor(private http: HttpClient, private messageService: MessageService) { }
 
-    getSeal(id: number): Observable<Seal> {
-        const url = `${this.sealListUrl}`;
-        return this.http.get<Seal>(url).pipe(
-            tap(_ => this.log(`fetched seal id=${id}`)),
-            catchError(this.handleError<Seal>(`getSeal id=${id}`))
-        );
+    // getSeal(id: number): Observable<Seal> {
+    //     const url = `${this.sealListUrl}`;
+    //     return this.http.get<Seal>(url).pipe(
+    //         tap(_ => this.log(`fetched seal id=${id}`)),
+    //         catchError(this.handleError<Seal>(`getSeal id=${id}`))
+    //     );
+    // }
+    getSealList(): Seal[] {
+        return SealList;
     }
-    getSealList(): Observable<Seal[]> {
-        return this.http.get<Seal[]>(this.sealListUrl)
-            .pipe(
-                // 使用 tap 来记录各种操作
-                // 查看 Observable 中的值，使用那些值做一些事情，并且把它们传出来
-                // 这种 tap 回调不会改变这些值本身
-                tap(_ => this.log('fetched sealList')),
-                catchError(this.handleError<Seal[]>('getSealList', []))
-            );
-    }
+    // getSealList(): Observable<Seal[]> {
+    //     const t = this.http.jsonp<Seal[]>(this.sealListUrl, '');
+    //     console.log(t);
+    //     return t;
+            // .pipe(
+            //     // 使用 tap 来记录各种操作
+            //     // 查看 Observable 中的值，使用那些值做一些事情，并且把它们传出来
+            //     // 这种 tap 回调不会改变这些值本身
+            //     tap(_ => this.log('fetched sealList')),
+            //     catchError(this.handleError<Seal[]>('getSealList', []))
+            // );
+    // }
     // getSealNo404<Data>(id: number): Observable<Seal> {
     //     const url = `${this.sealListUrl}`;
     //     return this.http.get<Seal[]>(url)
@@ -46,13 +53,13 @@ export class SealService {
     //             catchError(this.handleError<Seal>(`getSeal id=${id}`))
     //         );
     // }
-    updateSeal(seal: Seal): Observable<any> {
-        return this.http.put(this.sealListUrl, seal, httpOptions)
-            .pipe(
-                tap(_ => this.log(`updated seal id=${seal.id}`)),
-                catchError(this.handleError<any>('updateSeal'))
-            );
-    }
+    // updateSeal(seal: Seal): Observable<any> {
+    //     return this.http.put(this.sealListUrl, seal, httpOptions)
+    //         .pipe(
+    //             tap(_ => this.log(`updated seal id=${seal.id}`)),
+    //             catchError(this.handleError<any>('updateSeal'))
+    //         );
+    // }
 
     /**
    * Handle Http operation that failed.
