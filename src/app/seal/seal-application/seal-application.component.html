@@ -1,37 +1,24 @@
 <div class="seal-application">
-    <!-- 编辑申请 -->
-    <!-- <form *ngIf="seal; else elseBlock" nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
+    <!-- 申请模块 -->
+    <form nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
         (ngSubmit)="submitForm($event,validateForm.value)">
-        <nz-form-item class="hidden-item">
-            <nz-form-label nzRequired></nz-form-label>
-            <nz-form-control>
-                <input nz-input formControlName="id" [(ngModel)]="seal.id">
-            </nz-form-control>
-        </nz-form-item>
         <nz-form-item>
             <nz-form-label nzRequired>用章类型</nz-form-label>
             <nz-form-control>
-                <nz-radio-group formControlName="type" [(ngModel)]="seal.type" [nzButtonStyle]="'solid'">
+                <nz-radio-group formControlName="type" [(ngModel)]="radioType" [nzButtonStyle]="'solid'">
                     <label nz-radio-button nzValue="公司章">公司章</label>
                     <label nz-radio-button nzValue="合同章">合同章</label>
                     <label nz-radio-button nzValue="法人章">法人章</label>
                     <label nz-radio-button nzValue="业务专用章">业务专用章</label>
                     <label nz-radio-button nzValue="其他">其他</label>
                 </nz-radio-group>
-                <!-- <nz-radio-group [(ngModel)]="seal.type" nzName="radiogroup">
-                    <label nz-radio nzValue="1">公司章</label>
-                    <label nz-radio nzValue="2">合同章</label>
-                    <label nz-radio nzValue="3">法人章</label>
-                    <label nz-radio nzValue="4">业务专用章</label>
-                    <label nz-radio nzValue="0">其他</label>
-                </nz-radio-group> --
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label nzRequired>用章用途</nz-form-label>
             <nz-form-control>
-                <textarea formControlName="description" rows="4" nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }"
-                    placeholder="各种用章申请需填写详细的信息，如采购合同/销售合同/私人事务等+信息说明" [(ngModel)]="seal.description"></textarea>
+                <textarea formControlName="description" rows="4" nz-input
+                    placeholder="各种用章申请需填写详细的信息，如采购合同/销售合同/私人事务等+信息说明" [(ngModel)]="ngDescription"></textarea>
                 <nz-form-explain
                     *ngIf="validateForm.get('description').dirty&&validateForm.get('description').hasError('required')">
                     需要填写用章用途
@@ -41,7 +28,7 @@
         <nz-form-item>
             <nz-form-label nzRequired>申请人</nz-form-label>
             <nz-form-control nzHasFeedback>
-                <input nz-input formControlName="propser" placeholder="申请人姓名" [(ngModel)]="seal.propser">
+                <input nz-input formControlName="propser" placeholder="申请人姓名" [(ngModel)]="ngPropser">
                 <nz-form-explain
                     *ngIf="validateForm.get('propser').dirty && validateForm.get('propser').errors || validateForm.get('propser').pending ">
                     <ng-container *ngIf="validateForm.get('propser').hasError('required')">
@@ -59,7 +46,7 @@
         <nz-form-item>
             <nz-form-label nzRequired>部门负责人</nz-form-label>
             <nz-form-control>
-                <nz-select formControlName="pic" [(ngModel)]="seal.pic" nzAllowClear nzPlaceHolder="部门负责人姓名">
+                <nz-select formControlName="pic" [(ngModel)]="picValue" nzAllowClear nzPlaceHolder="部门负责人姓名">
                     <nz-option-group nzLabel="Manager">
                         <nz-option nzValue="aaa" nzLabel="aaa"></nz-option>
                         <nz-option nzValue="bbb" nzLabel="bbb"></nz-option>
@@ -73,8 +60,8 @@
         <nz-form-item>
             <nz-form-label nzRequired>审核人</nz-form-label>
             <nz-form-control>
-                <nz-select formControlName="auditor" [(ngModel)]="seal.auditor" nzShowSearch nzAllowClear
-                    nzPlaceHolder="审核人姓名">
+                <nz-select formControlName="auditor" nzShowSearch nzAllowClear nzPlaceHolder="审核人姓名"
+                    [(ngModel)]="auditorValue">
                     <nz-option nzLabel="xxx" nzValue="xxx"></nz-option>
                     <nz-option nzLabel="yyy" nzValue="yyy"></nz-option>
                     <nz-option nzLabel="zzz" nzValue="zzz"></nz-option>
@@ -84,7 +71,7 @@
         <nz-form-item class="hidden-item">
             <nz-form-label nzRequired></nz-form-label>
             <nz-form-control>
-                <input nz-input formControlName="time" [(ngModel)]="seal.time">
+                <input nz-input formControlName="time" [(ngModel)]="timeValue">
             </nz-form-control>
         </nz-form-item>
         <nz-form-item nzType="flex" nzJustify="center">
@@ -93,88 +80,5 @@
                 <button nz-button (click)="resetForm($event)">重置</button>
             </nz-form-control>
         </nz-form-item>
-    </form> -->
-    <!-- 申请模块（没有数据的时候） -->
-    <!-- <ng-template> -->
-        <form class="elseForm" nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
-            (ngSubmit)="submitForm($event,validateForm.value)">
-            <nz-form-item>
-                <nz-form-label nzRequired>111用章类型</nz-form-label>
-                <nz-form-control>
-                    <nz-radio-group formControlName="type" [(ngModel)]="radioType" [nzButtonStyle]="'solid'">
-                        <label nz-radio-button nzValue="公司章">公司章</label>
-                        <label nz-radio-button nzValue="合同章">合同章</label>
-                        <label nz-radio-button nzValue="法人章">法人章</label>
-                        <label nz-radio-button nzValue="业务专用章">业务专用章</label>
-                        <label nz-radio-button nzValue="其他">其他</label>
-                    </nz-radio-group>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired>用章用途</nz-form-label>
-                <nz-form-control>
-                    <textarea formControlName="description" rows="4" nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }"
-                        placeholder="各种用章申请需填写详细的信息，如采购合同/销售合同/私人事务等+信息说明" [(ngModel)]="ngDescription"></textarea>
-                    <nz-form-explain
-                        *ngIf="validateForm.get('description').dirty&&validateForm.get('description').hasError('required')">
-                        需要填写用章用途
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired>申请人</nz-form-label>
-                <nz-form-control nzHasFeedback>
-                    <input nz-input formControlName="propser" placeholder="申请人姓名" [(ngModel)]="ngPropser">
-                    <nz-form-explain
-                        *ngIf="validateForm.get('propser').dirty && validateForm.get('propser').errors || validateForm.get('propser').pending ">
-                        <ng-container *ngIf="validateForm.get('propser').hasError('required')">
-                            请输入申请人姓名!
-                        </ng-container>
-                        <ng-container *ngIf="validateForm.get('propser').hasError('duplicated')">
-                            The username is redundant!
-                        </ng-container>
-                        <ng-container *ngIf="validateForm.get('propser').pending">
-                            Validating...
-                        </ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label nzRequired>部门负责人</nz-form-label>
-                <nz-form-control>
-                    <nz-select formControlName="pic" [(ngModel)]="picValue" nzAllowClear nzPlaceHolder="部门负责人姓名">
-                        <nz-option-group nzLabel="Manager">
-                            <nz-option nzValue="aaa" nzLabel="aaa"></nz-option>
-                            <nz-option nzValue="bbb" nzLabel="bbb"></nz-option>
-                        </nz-option-group>
-                        <nz-option-group nzLabel="Engineer">
-                            <nz-option nzValue="ccc" nzLabel="ccc"></nz-option>
-                        </nz-option-group>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
-            <!-- <nz-form-item>
-                <nz-form-label nzRequired>审核人</nz-form-label>
-                <nz-form-control>
-                    <nz-select formControlName="auditorName" nzShowSearch nzAllowClear nzPlaceHolder="审核人姓名" [(ngModel)]="auditorValue">
-                        <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
-                        <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
-                        <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item> -->
-        <nz-form-item class="hidden-item">
-            <nz-form-label nzRequired></nz-form-label>
-            <nz-form-control>
-                <input nz-input formControlName="time" [(ngModel)]="timeValue">
-            </nz-form-control>
-        </nz-form-item>
-            <nz-form-item nzType="flex" nzJustify="center">
-                <nz-form-control>
-                    <button nz-button nzType="primary" [disabled]="!validateForm.valid" class="sumbitBtn">提交</button>
-                    <button nz-button (click)="resetForm($event)">重置</button>
-                </nz-form-control>
-            </nz-form-item>
-        </form>
-    <!-- </ng-template> -->
+    </form>
 </div>

@@ -13,30 +13,78 @@
             <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'" [nzCollapsedWidth]="0"
                 [nzZeroTrigger]="zeroTrigger">
                 <div class="slide-top"></div>
-                <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
-                    <li nz-submenu>
-                        <span title><i nz-icon type="file"></i><span class="nav-text">用章管理</span></span>
+                <ul class="left-nav" nz-menu [nzMode]="'inline'" nzTheme='dark' [nzInlineCollapsed]="isCollapsed">
+                    <li nz-submenu nz-tooltip nzPlacement="right">
+                        <span title>
+                            <i nz-icon type="file"></i>
+                            <span>人员管理</span>
+                        </span>
                         <ul>
-                            <li nz-menu-item>用章申请</li>
-                            <li nz-menu-item>用章记录</li>
+                            <li nz-menu-item><a routerLink="/team-department">部门管理</a></li>
+                            <li nz-menu-item><a routerLink="/team-employee">员工管理</a></li>
+                            <li nz-menu-item>Option 11</li>
                         </ul>
                     </li>
                     <li nz-submenu>
-                        <span title><i nz-icon type="file"></i><span class="nav-text">Team</span></span>
+                        <span title>
+                            <i nz-icon type="file"></i>
+                            <span>
+                                <a routerLink="/seal-record">用章记录</a>
+                            </span>
+                        </span>
                         <ul>
-                            <li nz-menu-item>Team 1</li>
-                            <li nz-menu-item>Team 2</li>
+                            <li nz-menu-item><a routerLink="/seal-record">用章记录</a></li>
+                            <li nz-menu-item>Option 6</li>
                         </ul>
                     </li>
-                    <li nz-menu-item><span><i nz-icon type="file"></i><span class="nav-text">File</span></span></li>
+                    <li nz-submenu>
+                        <span title>
+                            <i nz-icon type="file"></i>
+                            <span>Navigation Three</span>
+                        </span>
+                        <ul>
+                            <li nz-menu-item>Option 9</li>
+                            <li nz-menu-item>Option 10</li>
+                            <li nz-menu-item>Option 11</li>
+                        </ul>
+                    </li>
                 </ul>
+                <!-- <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+                    <li nz-menu-item>
+                        <span><i nz-icon type="file"></i>
+                            <span class="nav-text">用章管理</span>
+                        </span>
+                        <ul>
+                            <li nz-menu-item>
+                                <a routerLink="/seal-record">用章记录</a>
+                            </li>
+                            <!-- <li nz-menu-item>
+                                <a routerLink="/team-employee">员工管理</a>
+                            </li> --
+                        </ul>
+                    </li>
+                    <li nz-submenu>
+                        <span title><i nz-icon type="file"></i>
+                            <span class="nav-text">
+                                <a routerLink="/team">人员管理</a>
+                            </span>
+                        </span>
+                    </li>
+                    <li nz-submenu>
+                        <span title><i nz-icon type="file"></i>
+                            <span class="nav-text">
+                                file
+                            </span>
+                        </span>
+                    </li>
+                </ul> -->
             </nz-sider>
             <nz-layout>
                 <nz-content>
                     <div class="content-wrapper">
                         <div class="content-breadcrumb">
                             <nz-breadcrumb [nzAutoGenerate]="true">
-                                Home 
+                                Home
                             </nz-breadcrumb>
                         </div>
                         <div class="content-box">

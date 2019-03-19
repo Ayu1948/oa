@@ -92,12 +92,8 @@ export class SealRecordComponent implements OnInit {
     //     this.search(this.listOfSearchName, this.listOfSearchAddress)
     // }
 
-    showApplyModal(e, data) {
-        this.selectedSeal = undefined;  // 重置窗口
-        if (data !== undefined) {
-            console.log(data);
-            this.selectedSeal = data;
-        }
+    showApplyModal() {
+        // this.selectedSeal = undefined;  // 重置窗口
         this.showModal();
     }
     startEdit(id): void {
@@ -105,6 +101,7 @@ export class SealRecordComponent implements OnInit {
         this.sealList.forEach(item => {
             if (item.id === id) {
                 this.mapOfExpandData[id] = true;
+                console.log(this.mapOfExpandData);
             }
         });
     }
@@ -145,8 +142,9 @@ export class SealRecordComponent implements OnInit {
     }
 
     addSeal(data) {
+        this.isVisible = false;
         this.sealList = [...this.sealList, data];
-        this.handleCancel();
+        this.updateEditCache();
     }
     showModal(): void {
         this.isVisible = true;

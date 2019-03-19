@@ -19,7 +19,7 @@ import { DatePipe } from '@angular/common';
 })
 export class SealApplicationComponent implements OnInit {
     @Input() seal: Seal;
-    @Output() closeM: EventEmitter<any> = new EventEmitter();
+    @Output() addSeal: EventEmitter<any> = new EventEmitter();
     // propserValue;
     radioValue;
     radioType = '公司章';
@@ -78,7 +78,7 @@ export class SealApplicationComponent implements OnInit {
             auditor: [''],
             propser: ['', [Validators.required], [this.userNameAsyncValidator]],
             description: ['', [Validators.required],],
-            time: [this.datePipe.transform(this.dateNow, 'yyyy-mm-dd')]
+            time: ['']
         });
     }
 
@@ -87,14 +87,13 @@ export class SealApplicationComponent implements OnInit {
         // tslint:disable-next-line: forin
         for (const key in this.validateForm.controls) {
             if (key === 'time') {
-                value.time = this.datePipe.transform(this.dateNow, 'yyyy-mm-dd');
+                value.time = this.datePipe.transform(this.dateNow, 'yyyy-MM-dd');
+                // value.id = 123;
             }
-            console.log(this.validateForm.controls[key].updateValueAndValidity())
             this.validateForm.controls[key].markAsDirty();
             this.validateForm.controls[key].updateValueAndValidity();
         }
-        this.closeM.emit(value);
-        console.log(value);
+        this.addSeal.emit(value);
     }
     ngOnInit() {
     }

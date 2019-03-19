@@ -14,6 +14,8 @@ import { SealApplicationComponent } from './seal/seal-application/seal-applicati
 import { SealRecordComponent } from './seal/seal-record/seal-record.component';
 // import { InMemoryDataService } from './in-memory-data.service';
 import { MessagesComponent } from './messages/messages.component';
+import { TeamDepartmentComponent } from './team/team-department/team-department.component';
+import { TeamEmployeeComponent } from './team/team-employee/team-employee.component';
 
 
 registerLocaleData(en);
@@ -23,7 +25,9 @@ registerLocaleData(en);
     AppComponent,
     SealApplicationComponent,
     SealRecordComponent,
-    MessagesComponent
+    MessagesComponent,
+    TeamDepartmentComponent,
+    TeamEmployeeComponent
   ],
   imports: [
     BrowserModule,

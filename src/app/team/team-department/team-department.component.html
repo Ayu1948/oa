@@ -1,0 +1,26 @@
+<div class="box">
+    <div nz-row [nzGutter]="8">
+        <div nz-col [nzSpan]="8" *ngFor="let data of DepList">
+            <nz-card [nzTitle]="data.name">
+                <p>负责人：{{data.pic}}</p>
+                <p>总人数：{{data.total}}</p>
+                <p>详情 ：{{data.tip}}</p>
+            </nz-card>
+        </div>
+    </div>
+</div>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="部门人员" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <nz-list [nzDataSource]="EmpList" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+        <ng-template #item let-item>
+            <nz-list-item>
+                <nz-list-item-meta [nzTitle]="nzTitle"
+                    nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                    nzDescription="Ant Design, a design language for background applications, is refined by Ant UED Team">
+                    <ng-template #nzTitle>
+                        <a href="https://ng.ant.design">{{item.title}}</a>
+                    </ng-template>
+                </nz-list-item-meta>
+            </nz-list-item>
+        </ng-template>
+    </nz-list>
+</nz-modal>
