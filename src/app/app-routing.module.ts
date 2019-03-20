@@ -24,6 +24,12 @@ const routes: Routes = [
         data: {
             breadcrumb: '/ team-employee'
         }
+    }, {
+        path: 'team-employee/:id',
+        component: TeamEmployeeComponent,
+        data: {
+            breadcrumb: '/ team-employee'
+        }
     }
 ];
 

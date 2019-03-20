@@ -10,6 +10,7 @@ import { Employee, Department } from '../team';
 export class TeamDepartmentComponent implements OnInit {
 
     EmpList: Employee[];
+    eName: string;
     DepList: Department[];
     isVisible = false;
     constructor(private teamService: TeamService) { }
@@ -18,10 +19,15 @@ export class TeamDepartmentComponent implements OnInit {
         this.EmpList = this.teamService.getEmpList();
         console.log(this.EmpList);
     }
-    
+
     getDepList(): void {
         this.DepList = this.teamService.getDepList();
         console.log(this.DepList);
+    }
+
+    showElse(name): void {
+        this.showModal();
+        this.eName = name;
     }
 
     showModal(): void {
@@ -34,11 +40,13 @@ export class TeamDepartmentComponent implements OnInit {
     }
 
     handleCancel(): void {
-        console.log('Button cancel clicked!');
+        // console.log('Button cancel clicked!');
+        this.eName = '';
         this.isVisible = false;
     }
     ngOnInit() {
         this.getDepList();
+        this.getEmpList();
     }
 
 }

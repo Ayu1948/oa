@@ -1,0 +1,43 @@
+.logo {
+    height: 32px;
+    background: rgba(255, 255, 255, .2);
+    margin: 16px;
+}
+
+.team-employee {
+    position: relative;
+    nz-side {
+        overflow: auto;
+        height: 100vh;
+        position: absolute;
+        left: 0
+    }
+    .content-layout {
+        margin-left: 200;
+        nz-content {
+            margin: 24px 16px 0;
+            overflow: initial;
+            .content-div {
+                padding: 24px;
+                background: #fff;
+                text-align: center;
+                [nz-form] {
+                    max-width: 600px;
+                    .hiddenC {
+                        display: none;
+                    }
+                    .span-text {
+                        width: 100%;
+                        display: block;
+                        text-align: left;
+                        padding-left: 10px;
+                        box-sizing: border-box;
+                    }
+                }
+                button {
+                    margin-left: 8px;
+                }
+            }
+        }
+    }
+}
