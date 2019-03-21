@@ -1,12 +1,12 @@
 <div class="box">
-    <div nz-row [nzGutter]="8">
-        <div nz-col [nzSpan]="8" *ngFor="let data of DepList">
+    <div nz-row [nzGutter]="6">
+        <div nz-col [nzSpan]="6" *ngFor="let data of depList">
             <!-- <nz-card >
                 <p>负责人：{{data.pic}}</p>
                 <p>总人数：{{data.total}}</p>
                 <p>详情 ：{{data.tip}}</p>
             </nz-card> -->
-            <nz-card [nzCover]="coverTemplate" [nzActions]="[actionSetting,actionEdit,actionEllipsis]">
+            <nz-card [nzCover]="coverTemplate" [nzActions]="[actionSetting,actionEdit,actionEllipsis]" [nzHoverable]="true">
                 <nz-card-meta [nzTitle]="data.name" [nzDescription]="data.tip" [nzAvatar]="avatarTemplate">
                 </nz-card-meta>
             </nz-card>
@@ -30,7 +30,7 @@
 </div>
 <!-- <div class="box" *ngIf="eName">
     <div nz-row [nzGutter]="8">
-        <div nz-col [nzSpan]="8" *ngFor="let item of EmpList">
+        <div nz-col [nzSpan]="8" *ngFor="let item of empList">
             <nz-card [nzTitle]="eName + ' 部门人员'" 
                 [nzHoverable]="true">
                 <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="item.name" [nzDescription]="item.id">
@@ -43,7 +43,7 @@
     </div>
 </div> -->
 <nz-modal [(nzVisible)]="isVisible" [nzTitle]="eName + ' 部门人员'" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzFooter]="null">
-    <nz-list [nzDataSource]="EmpList" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+    <nz-list [nzDataSource]="empList" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
         <ng-template #item let-item>
             <nz-list-item *ngIf="item.department === eName">
                 <nz-list-item-meta [nzTitle]="nzTitle"

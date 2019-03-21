@@ -18,40 +18,43 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TeamEmployeeComponent implements OnInit {
 
-    EmpList: Employee[];
-    DepList: Department[];
-    EmpInDepList: { [key: string]: any } = {};
+    empList: Employee[];
+    depList: Department[];
+    empInDepList: { [key: string]: any } = {};
     @Input() emp: Employee;
-    test: 123;
     // constructor(private teamService: TeamService) { }
 
     getEmpList(): void {
-        this.EmpList = this.teamService.getEmpList();
-        console.log(this.EmpList);
+        this.teamService.getEmpList()
+            .subscribe(empList => this.empList = empList);
+        // this.empList = this.teamService.getEmpList();
+        console.log(this.empList);
     }
 
     getDepList(): void {
-        this.DepList = this.teamService.getDepList();
-        console.log(this.DepList);
+        this.teamService.getDepList()
+            .subscribe(depList => this.depList = depList);
+        // this.depList = this.teamService.getDepList();
+        console.log(this.depList);
     }
 
     getEmpInDep(): void {
-        this.EmpInDepList = this.DepList;
+        this.empInDepList = this.depList;
         let empData: Employee[] = [];
-        for (const index in this.DepList) {
-            this.EmpList.forEach(emp => {
-                if (emp.department === this.DepList[index].name) {
+        for (const index in this.depList) {
+            this.empList.forEach(emp => {
+                if (emp.department === this.depList[index].name) {
                     empData.push(emp);
                     console.log(emp)
                 }
             });
-            this.EmpInDepList[index] = {
-                data: this.DepList[index],
+            this.empInDepList[index] = {
+                data: this.depList[index],
                 emp: empData
             }
             empData = [];
         }
-        console.log(this.EmpInDepList);
+        console.log(this.empInDepList);
     }
 
 
@@ -118,11 +121,20 @@ export class TeamEmployeeComponent implements OnInit {
     getEmp(): void {
         const id = +this.route.snapshot.paramMap.get('id');
         // this.emp = this.teamService.getEmp(id);
-        this.EmpList.forEach(item => {
-            if (item.id === id) {
-                this.emp = item;
-            }
-        });
+        if (id !== 0) {
+            this.empList.forEach(item => {
+                if (item.id === id) {
+                    this.emp = item;
+                }
+            });
+        } else {
+            this.empList.forEach(item => {
+                if (item.id === 301) {
+                    this.emp = item;
+                }
+            });
+        }
+
         console.log(this.emp);
         // this.teamService.getEmp(id)
         //     .subscribe(emp => {

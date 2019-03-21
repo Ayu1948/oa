@@ -9,20 +9,24 @@ import { Employee, Department } from '../team';
 })
 export class TeamDepartmentComponent implements OnInit {
 
-    EmpList: Employee[];
+    empList: Employee[] = [];
     eName: string;
-    DepList: Department[];
+    depList: Department[] = [];
     isVisible = false;
     constructor(private teamService: TeamService) { }
 
     getEmpList(): void {
-        this.EmpList = this.teamService.getEmpList();
-        console.log(this.EmpList);
+        this.teamService.getEmpList()
+            .subscribe(empList => this.empList = empList);
+        // this.empList = this.teamService.getEmpList();
+        console.log(this.empList);
     }
 
     getDepList(): void {
-        this.DepList = this.teamService.getDepList();
-        console.log(this.DepList);
+        this.teamService.getDepList()
+            .subscribe(depList => this.depList = depList);
+        // this.depList = this.teamService.getDepList();
+        console.log(this.depList);
     }
 
     showElse(name): void {

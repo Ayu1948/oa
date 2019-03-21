@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Employee, Department } from './team';
-import { EmpList, DepList } from './team-data';
-import { Observable } from 'rxjs';
+import { empList, depList } from './team-data';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap, catchError } from 'rxjs/operators';
 
@@ -16,12 +16,11 @@ export class TeamService {
     private empUrl = 'api/team-employee';
 
 	constructor(private http: HttpClient) { }
-	getDepList(): Department[] {
-        console.log(123);
-		return DepList;
+	getDepList(): Observable<Department[]> {
+		return of(depList);
 	}
-	getEmpList(): Employee[] {
-		return EmpList;
+	getEmpList(): Observable<Employee[]> {
+		return of(empList);
     }
     // getEmp(id: number): Employee {
     //     const url = `${this.empUrl}/${id}`;

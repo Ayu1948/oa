@@ -1,6 +1,6 @@
 import { Employee, Department } from './team';
 
-export const EmpList: Employee[] = [
+export const empList: Employee[] = [
     {
         id: 301,
         name: '员工1',
@@ -32,7 +32,7 @@ export const EmpList: Employee[] = [
     }
 ]
 
-export const DepList: Department[] = [
+export const depList: Department[] = [
     {
         id: 101,
         name: '部门1',

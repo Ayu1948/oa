@@ -104,7 +104,7 @@
                 </ng-template>
             </div>
             <ul nz-menu [nzTheme]="'light'" [nzMode]="'inline'">
-                <li nz-submenu *ngFor="let item of EmpInDepList">
+                <li nz-submenu *ngFor="let item of empInDepList">
                     <span title>
                         <i nz-icon type="file"></i>
                         <span class="nav-text">{{item.data.name}}</span>
@@ -125,8 +125,7 @@
                             <nz-form-label [nzSpan]="7" nzRequired>工号</nz-form-label>
                             <nz-form-control [nzSpan]="12" nzHasFeedback>
                                 <span class="span-text">{{emp.id}}</span>
-                                <input class="hiddenC" nz-input formControlName="userId" [(ngModel)]="emp.id"
-                                    [disabled]="true">
+                                <input class="hiddenC" nz-input formControlName="userId" [(ngModel)]="emp.id">
                             </nz-form-control>
                         </nz-form-item>
                         <nz-form-item>
