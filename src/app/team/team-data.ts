@@ -50,6 +50,6 @@ export const depList: Department[] = [
         name: '部门3',
         pic: '员工1',
         total: 2,
-        tip: '3-1'
+        tip: '103-1'
     }
 ]

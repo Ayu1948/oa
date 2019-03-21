@@ -11,6 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Seal } from '../seal';
 import { SealService } from '../seal.service';
 import { DatePipe } from '@angular/common';
+import { TeamService } from 'src/app/team/team.service';
+import { EmpInDep } from 'src/app/team/team';
 
 @Component({
     selector: 'app-seal-application',
@@ -28,6 +30,8 @@ export class SealApplicationComponent implements OnInit {
     ngDescription = '';
     ngPropser = '';
     timeValue;
+
+    empInDepList: EmpInDep[];
     // constructor() { }
     dateNow = new Date();
 
@@ -70,7 +74,8 @@ export class SealApplicationComponent implements OnInit {
         private fb: FormBuilder,
         private datePipe: DatePipe,
         private route: ActivatedRoute,
-        private sealService: SealService) {
+        private sealService: SealService,
+        private teamService: TeamService) {
         this.validateForm = this.fb.group({
             id: [''],
             type: ['', [Validators.required]],
@@ -96,6 +101,9 @@ export class SealApplicationComponent implements OnInit {
         this.addSeal.emit(value);
     }
     ngOnInit() {
+        this.teamService.getEmpInDep()
+            .subscribe(empInDep => this.empInDepList = empInDep);
+        console.log(this.empInDepList);
     }
 
 }

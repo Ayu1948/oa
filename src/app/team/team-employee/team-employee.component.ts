@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TeamService } from '../team.service';
-import { Employee, Department } from '../team';
+import { Employee, Department, EmpInDep } from '../team';
 import {
     FormBuilder,
     FormControl,
@@ -20,8 +20,9 @@ export class TeamEmployeeComponent implements OnInit {
 
     empList: Employee[];
     depList: Department[];
-    empInDepList: { [key: string]: any } = {};
-    @Input() emp: Employee;
+    empInDepList: EmpInDep[];
+    // empInDepList: { [key: string]: any } = {};
+    @Input() emp: Employee = null;
     // constructor(private teamService: TeamService) { }
 
     getEmpList(): void {
@@ -39,25 +40,11 @@ export class TeamEmployeeComponent implements OnInit {
     }
 
     getEmpInDep(): void {
-        this.empInDepList = this.depList;
-        let empData: Employee[] = [];
-        for (const index in this.depList) {
-            this.empList.forEach(emp => {
-                if (emp.department === this.depList[index].name) {
-                    empData.push(emp);
-                    console.log(emp)
-                }
-            });
-            this.empInDepList[index] = {
-                data: this.depList[index],
-                emp: empData
-            }
-            empData = [];
-        }
+        this.teamService.getEmpInDep()
+            .subscribe(empInDepList => this.empInDepList = empInDepList);
+        // this.empInDepList = this.teamService.getEmpInDep();
         console.log(this.empInDepList);
     }
-
-
 
     validateForm: FormGroup;
     submitForm = ($event: any, value: any) => {
@@ -116,11 +103,40 @@ export class TeamEmployeeComponent implements OnInit {
         this.getEmpList();
         this.getDepList();
         this.getEmpInDep();
-        this.getEmp();
+        this.getEmpUrl();
     }
-    getEmp(): void {
-        const id = +this.route.snapshot.paramMap.get('id');
+    getEmpId(id: number): void {
+        console.log(id);
+        this.emp = null;
+        // if (id)
+        // const id = 
         // this.emp = this.teamService.getEmp(id);
+        // if (id !== 0) {
+        this.empList.forEach(item => {
+            if (item.id === id) {
+                this.emp = item;
+            }
+        });
+        // } else {
+        //     this.empList.forEach(item => {
+        //         if (item.id === 301) {
+        //             this.emp = item;
+        //         }
+        //     });
+        // }
+
+        console.log(this.emp);
+        // this.teamService.getEmp(id)
+        //     .subscribe(emp => {
+        //         console.log(this.emp);
+        //         console.log(emp);
+        //         this.emp = emp;
+        //     });
+        // console.log(id);
+    }
+    getEmpUrl(): void {
+        this.emp = null;
+        const id = +this.route.snapshot.paramMap.get('id');
         if (id !== 0) {
             this.empList.forEach(item => {
                 if (item.id === id) {
@@ -134,15 +150,7 @@ export class TeamEmployeeComponent implements OnInit {
                 }
             });
         }
-
         console.log(this.emp);
-        // this.teamService.getEmp(id)
-        //     .subscribe(emp => {
-        //         console.log(this.emp);
-        //         console.log(emp);
-        //         this.emp = emp;
-        //     });
-        // console.log(id);
     }
 
 }

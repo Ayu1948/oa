@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SealRecordComponent } from './seal/seal-record/seal-record.component';
 import { TeamDepartmentComponent } from './team/team-department/team-department.component';
 import { TeamEmployeeComponent } from './team/team-employee/team-employee.component';
+import { AttenceRecordComponent } from './attence/attence-record/attence-record.component';
 
 const routes: Routes = [
     {
@@ -29,6 +30,12 @@ const routes: Routes = [
         component: TeamEmployeeComponent,
         data: {
             breadcrumb: '/ team-employee'
+        }
+    }, {
+        path: 'attence-record',
+        component: AttenceRecordComponent,
+        data: {
+            breadcrumb: '/ attence-record'
         }
     }
 ];

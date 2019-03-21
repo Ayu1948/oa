@@ -1,97 +1,3 @@
-<!-- <div class="team-employee" nz-row>
-    <div class="right-content" nz-col [nzSpan]="18" [nzPush]="6">
-        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm($event, validateForm.value)">
-            <nz-form-item>
-                <nz-form-label [nzSpan]="7" nzRequired>Username</nz-form-label>
-                <nz-form-control [nzSpan]="12" nzHasFeedback>
-                    <input nz-input formControlName="userName" placeholder="async validate try to write JasonWood">
-                    <nz-form-explain
-                        *ngIf="validateForm.get('userName')?.dirty && validateForm.get('userName')?.errors || validateForm.get('userName')?.pending ">
-                        <ng-container *ngIf="validateForm.get('userName')?.hasError('required')">
-                            Please input your username!
-                        </ng-container>
-                        <ng-container *ngIf="validateForm.get('userName')?.hasError('duplicated')">
-                            The username is redundant!
-                        </ng-container>
-                        <ng-container *ngIf="validateForm.get('userName')?.pending">
-                            Validating...
-                        </ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label [nzSpan]="7" nzRequired>E-mail</nz-form-label>
-                <nz-form-control [nzSpan]="12" nzHasFeedback>
-                    <input nz-input formControlName="email" placeholder="email" type="email">
-                    <nz-form-explain *ngIf="validateForm.get('email')?.dirty&&validateForm.get('email')?.errors">
-                        <ng-container *ngIf="validateForm.get('email')?.hasError('email')">
-                            The input is not valid E-mail!
-                        </ng-container>
-                        <ng-container *ngIf="validateForm.get('email')?.hasError('required')">
-                            Please input your E-mail!
-                        </ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label [nzSpan]="7" nzRequired>Password</nz-form-label>
-                <div>
-                    <nz-form-control [nzSpan]="12" nzHasFeedback>
-                        <input nz-input type="password" formControlName="password"
-                            (ngModelChange)="validateConfirmPassword()">
-                        <nz-form-explain
-                            *ngIf="validateForm.get('password')?.dirty&&validateForm.get('password')?.hasError('required')">
-                            Please input your password!</nz-form-explain>
-                    </nz-form-control>
-                </div>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label [nzSpan]="7" nzRequired>Confirm Password</nz-form-label>
-                <nz-form-control [nzSpan]="12" nzHasFeedback>
-                    <input nz-input type="password" formControlName="confirm" placeholder="confirm your password">
-                    <nz-form-explain *ngIf="validateForm.get('confirm')?.dirty&&validateForm.get('confirm')?.errors">
-                        <ng-container *ngIf="validateForm.get('confirm')?.hasError('required')">
-                            Please confirm your password!
-                        </ng-container>
-                        <ng-container *ngIf="validateForm.get('confirm')?.hasError('confirm')">
-                            Password is inconsistent!
-                        </ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-label [nzSpan]="7" nzRequired>Comment</nz-form-label>
-                <nz-form-control [nzSpan]="12">
-                    <textarea formControlName="comment" nz-input rows="2" placeholder="write any thing"></textarea>
-                    <nz-form-explain
-                        *ngIf="validateForm.get('comment')?.dirty&&validateForm.get('comment')?.hasError('required')">
-                        Please write something here!</nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-control [nzOffset]="7" [nzSpan]="12">
-                    <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
-                    <button nz-button (click)="resetForm($event)">Reset</button>
-                </nz-form-control>
-            </nz-form-item>
-        </form>
-    </div>
-    <div class="left-list" nz-col [nzSpan]="6" [nzPull]="18">
-        <nz-list [nzDataSource]="EmpList" [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzLoading]="loading">
-            <ng-template #item let-item>
-                <nz-list-item>
-                    <nz-list-item-meta [nzTitle]="nzTitle"
-                        nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png">
-                        <ng-template #nzTitle>
-                            <a routerLink="/team-employee/{{item.id}}">{{item.name}}</a>
-                        </ng-template>
-                    </nz-list-item-meta>
-                </nz-list-item>
-            </ng-template>
-        </nz-list>
-    </div>
-</div> -->
-
 <div class="team-employee">
     <nz-layout>
         <nz-sider [nzTheme]="'light'">
@@ -107,11 +13,11 @@
                 <li nz-submenu *ngFor="let item of empInDepList">
                     <span title>
                         <i nz-icon type="file"></i>
-                        <span class="nav-text">{{item.data.name}}</span>
+                        <span class="nav-text">{{item.name}}</span>
                     </span>
                     <ul>
                         <li nz-menu-item *ngFor="let item2 of item.emp">
-                            <a routerLink="/team-employee/{{item2.id}}" (click)="getEmp()">{{item2.name}}</a>
+                            <a (click)="getEmpId(item2.id)" routerLink="/team-employee/item2.id">{{item2.name}}</a>
                         </li>
                     </ul>
                 </li>

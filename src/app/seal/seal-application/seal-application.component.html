@@ -1,7 +1,6 @@
 <div class="seal-application">
     <!-- 申请模块 -->
-    <form nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
-        (ngSubmit)="submitForm($event,validateForm.value)">
+    <form nz-form [nzLayout]="Vertical" [formGroup]="validateForm" (ngSubmit)="submitForm($event,validateForm.value)">
         <nz-form-item>
             <nz-form-label nzRequired>用章类型</nz-form-label>
             <nz-form-control>
@@ -46,25 +45,27 @@
         <nz-form-item>
             <nz-form-label nzRequired>部门负责人</nz-form-label>
             <nz-form-control>
-                <nz-select formControlName="pic" [(ngModel)]="picValue" nzAllowClear nzPlaceHolder="部门负责人姓名">
-                    <nz-option-group nzLabel="Manager">
-                        <nz-option nzValue="aaa" nzLabel="aaa"></nz-option>
-                        <nz-option nzValue="bbb" nzLabel="bbb"></nz-option>
+                <nz-select formControlName="pic" nzAllowClear nzPlaceHolder="部门负责人姓名">
+                    <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                        <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+                        <!-- <nz-option nzValue="bbb" nzLabel="bbb"></nz-option> -->
                     </nz-option-group>
-                    <nz-option-group nzLabel="Engineer">
+                    <!-- <nz-option-group nzLabel="Engineer">
                         <nz-option nzValue="ccc" nzLabel="ccc"></nz-option>
-                    </nz-option-group>
+                    </nz-option-group> -->
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label nzRequired>审核人</nz-form-label>
             <nz-form-control>
-                <nz-select formControlName="auditor" nzShowSearch nzAllowClear nzPlaceHolder="审核人姓名"
-                    [(ngModel)]="auditorValue">
-                    <nz-option nzLabel="xxx" nzValue="xxx"></nz-option>
-                    <nz-option nzLabel="yyy" nzValue="yyy"></nz-option>
-                    <nz-option nzLabel="zzz" nzValue="zzz"></nz-option>
+                <nz-select formControlName="auditor" nzShowSearch nzAllowClear nzPlaceHolder="审核人姓名">
+                    <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                        <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+                    </nz-option-group>
+                    <!-- <nz-option nzLabel="xxx" nzValue="xxx"></nz-option>
+                    <nz-option nzLabel="yyy" nzValue="yyy"></nz-option> -->
+                    <!-- <nz-option nzLabel="zzz" nzValue="zzz"></nz-option> -->
                 </nz-select>
             </nz-form-control>
         </nz-form-item>

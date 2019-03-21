@@ -16,6 +16,7 @@ import { SealRecordComponent } from './seal/seal-record/seal-record.component';
 import { MessagesComponent } from './messages/messages.component';
 import { TeamDepartmentComponent } from './team/team-department/team-department.component';
 import { TeamEmployeeComponent } from './team/team-employee/team-employee.component';
+import { AttenceRecordComponent } from './attence/attence-record/attence-record.component';
 
 
 registerLocaleData(en);
@@ -27,7 +28,8 @@ registerLocaleData(en);
     SealRecordComponent,
     MessagesComponent,
     TeamDepartmentComponent,
-    TeamEmployeeComponent
+    TeamEmployeeComponent,
+    AttenceRecordComponent
   ],
   imports: [
     BrowserModule,

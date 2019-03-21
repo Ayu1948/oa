@@ -23,8 +23,9 @@ export class TeamDepartmentComponent implements OnInit {
     }
 
     getDepList(): void {
+        this.depList = [];
         this.teamService.getDepList()
-            .subscribe(depList => this.depList = depList);
+            .subscribe(depList => {this.depList = depList, console.log(depList)});
         // this.depList = this.teamService.getDepList();
         console.log(this.depList);
     }
