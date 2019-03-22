@@ -10,8 +10,31 @@ nz-table {
         margin-right: 8px;
     }
     td {
-        input {
-            max-width: 133px;
+        nz-mention {
+            input {
+                height: 22px;
+                font-size: 12px;
+                line-height: 20px;
+                max-width: 150px;
+            }
+        }
+        nz-range-picker {
+            margin: 0 8px 12px 0;
+        }
+        nz-date-picker {
+            margin: 0 8px 12px 0;
         }
     }
+}
+
+.editable-tag {
+    background: rgb(255, 255, 255);
+    border-style: dashed;
+}
+
+.ant-avatar.ant-avatar-sm {
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    position: relative;
 }

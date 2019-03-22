@@ -5,16 +5,17 @@
         <button nz-button (click)="resetSortAndFilters()">清除过滤和排序</button>
         <button nz-button nzType="primary" (click)="showModal()">申请请假</button>
     </div>
-    <nz-table #nzTable [nzData]="sealList">
+    <nz-table #nzTable [nzData]="attenceList">
         <thead>
             <tr>
                 <th nzShowExpand></th>
-                <th>序号</th>
-                <th nzWidth="13%">申请类型</th>
-                <th nzWidth="13%">申请人</th>
+                <!-- <th>序号</th> -->
+                <th nzWidth="10%">申请类型</th>
+                <th nzWidth="10%">申请人</th>
                 <th>负责人</th>
                 <th>审核人</th>
                 <th>申请时间</th>
+                <!-- <th nzWidth="15%">起止时间</th> -->
                 <th>申请状态</th>
                 <th>操作</th>
             </tr>
@@ -23,9 +24,9 @@
             <ng-template ngFor let-data [ngForOf]="nzTable.data">
                 <tr>
                     <td nzShowExpand [(nzExpand)]="mapOfExpandData[data.id]"></td>
-                    <td>
+                    <!-- <td>
                         {{data.id}}
-                    </td>
+                    </td> -->
                     <td>
                         <ng-container *ngIf="!editCache[data.id].edit; else typeInput">{{data.type}}</ng-container>
                         <ng-template #typeInput>
@@ -42,12 +43,22 @@
                     <td>{{data.pic}}</td>
                     <td>{{data.auditor}}</td>
                     <td>{{data.time}}</td>
+                    <!-- <td>
+                        <ng-container *ngIf="!editCache[data.id].edit; else timeInput">
+                            &nbsp;&nbsp; {{data.stime}}<br />~{{data.etime}}
+                        </ng-container>
+                        <ng-template #timeInput>
+                            <nz-range-picker [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"
+                                [nzPlaceHolder]="['Start Time', 'End Time']" (ngModelChange)="onChange($event)"
+                                (nzOnOk)="onOk($event)"></nz-range-picker>
+                        </ng-template>
+                    </td> -->
                     <td>{{data.status}}</td>
                     <td>
                         <ng-container *ngIf="!editCache[data.id].edit; else saveTpl">
                             <button nz-button nzType="primary" (click)="startEdit(data.id)">编辑</button>
-                            <button nz-button nz-popconfirm [(nzTitle)]="delSealTipTitle"
-                                (nzOnConfirm)="delSeal(data.id)" (nzOnCancel)="cancelDelSeal()" nzOkText="确认"
+                            <button nz-button nz-popconfirm [(nzTitle)]="delTipTitle"
+                                (nzOnConfirm)="delAttence(data.id)" nzOkText="确认"
                                 nzCancelText="取消">撤销</button>
                         </ng-container>
                         <ng-template #saveTpl>
@@ -61,9 +72,38 @@
                     <td></td>
                     <td colspan="8">
                         <ng-container *ngIf="!editCache[data.id].edit; else descriptionTpl">
+                            <p>起止时间：{{data.stime}} ～ {{data.etime}}</p>
+                            <p>知会人： {{data.notify}}</p>
                             {{data.description}}
                         </ng-container>
                         <ng-template #descriptionTpl>
+                            <p>
+                                起止时间：
+                                <nz-range-picker [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"
+                                    (ngModelChange)="onChange($event)" 
+                                    [(ngModel)]="rangeData"
+                                    (nzOnOk)="onOk($event)"></nz-range-picker>
+                            </p>
+                            <p>
+                                知会人：
+                                <nz-tag *ngFor="let i of data.notify" nzMode="closeable" (nzOnClose)="onClose()"
+                                    (nzAfterClose)="afterClose()" (nzAfterClose)="handleClose(data.id,i)">{{i}}
+                                </nz-tag>
+                                <nz-mention [nzSuggestions]="empList" [nzValueWith]="valueWith"
+                                    (nzOnSelect)="onSelect($event)">
+                                    <input nz-input nzMentionTrigger nzSize="small" [(ngModel)]="inputValue"
+                                        placeholder="输入@选择新增知会人" (blur)="handleInputConfirm(data.id)"
+                                        (keydown.enter)="handleInputConfirm(data.id)" />
+                                    <ng-container *nzMentionSuggestion="let empList">
+                                        <nz-avatar nzSize="small" [nzText]="empList.name">
+                                        </nz-avatar>
+                                        <span>{{ empList.department }} - {{ empList.name }}</span>
+                                    </ng-container>
+                                </nz-mention>
+                                <input #inputElement nz-input nzSize="small" *ngIf="inputVisible" type="text"
+                                    [(ngModel)]="inputValue" (blur)="handleInputConfirm(data.notify)"
+                                    (keydown.enter)="handleInputConfirm(data.notify)" />
+                            </p>
                             <textarea rows="4" nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }"
                                 [(ngModel)]="editCache[data.id].data.description"></textarea>
                         </ng-template>
