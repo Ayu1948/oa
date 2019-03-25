@@ -42,8 +42,8 @@ export const attenceList: Attence[] = [
         description: '加班xxx地点，时长一天'
     }, {
         id: 204,
-        type: '出差',
-        ltype: null,
+        type: '请假',
+        ltype: '病假',
         propser: '员工1',
         pic: '员工3',
         auditor: '员工6',
@@ -52,7 +52,7 @@ export const attenceList: Attence[] = [
         stime: '2019-03-23 9:00',
         etime: '2019-03-24 9:00',
         status: 0,
-        description: '出差xxx地点，时长一天'
+        description: '请病假一天'
     }, {
         id: 205,
         type: '请假',

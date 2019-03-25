@@ -3,19 +3,17 @@
         <button nz-button (click)="sort('id','descend')">序号排序</button>
         <button nz-button (click)="resetFilters()">清除过滤</button>
         <button nz-button (click)="resetSortAndFilters()">清除过滤和排序</button>
-        <button nz-button nzType="primary" (click)="showModal()">申请请假</button>
+        <button nz-button nzType="primary" (click)="showModal()">提交申请</button>
     </div>
     <nz-table #nzTable [nzData]="attenceList">
         <thead>
             <tr>
                 <th nzShowExpand></th>
-                <!-- <th>序号</th> -->
                 <th nzWidth="10%">申请类型</th>
                 <th nzWidth="10%">申请人</th>
                 <th>负责人</th>
                 <th>审核人</th>
                 <th>申请时间</th>
-                <!-- <th nzWidth="15%">起止时间</th> -->
                 <th>申请状态</th>
                 <th>操作</th>
             </tr>
@@ -24,13 +22,16 @@
             <ng-template ngFor let-data [ngForOf]="nzTable.data">
                 <tr>
                     <td nzShowExpand [(nzExpand)]="mapOfExpandData[data.id]"></td>
-                    <!-- <td>
-                        {{data.id}}
-                    </td> -->
                     <td>
                         <ng-container *ngIf="!editCache[data.id].edit; else typeInput">{{data.type}}</ng-container>
                         <ng-template #typeInput>
-                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.type">
+                            <nz-select [(ngModel)]="data.type" (ngModelChange)="showLtype(data)">
+                                <nz-option nzValue="外勤" nzLabel="外勤"></nz-option>
+                                <nz-option nzValue="出差" nzLabel="出差"></nz-option>
+                                <nz-option nzValue="加班" nzLabel="加班"></nz-option>
+                                <nz-option nzValue="请假" nzLabel="请假"></nz-option>
+                                <nz-option nzValue="其他" nzLabel="其他"></nz-option>
+                            </nz-select>
                         </ng-template>
                     </td>
                     <td>
@@ -43,23 +44,12 @@
                     <td>{{data.pic}}</td>
                     <td>{{data.auditor}}</td>
                     <td>{{data.time}}</td>
-                    <!-- <td>
-                        <ng-container *ngIf="!editCache[data.id].edit; else timeInput">
-                            &nbsp;&nbsp; {{data.stime}}<br />~{{data.etime}}
-                        </ng-container>
-                        <ng-template #timeInput>
-                            <nz-range-picker [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"
-                                [nzPlaceHolder]="['Start Time', 'End Time']" (ngModelChange)="onChange($event)"
-                                (nzOnOk)="onOk($event)"></nz-range-picker>
-                        </ng-template>
-                    </td> -->
                     <td>{{data.status}}</td>
                     <td>
                         <ng-container *ngIf="!editCache[data.id].edit; else saveTpl">
                             <button nz-button nzType="primary" (click)="startEdit(data.id)">编辑</button>
                             <button nz-button nz-popconfirm [(nzTitle)]="delTipTitle"
-                                (nzOnConfirm)="delAttence(data.id)" nzOkText="确认"
-                                nzCancelText="取消">撤销</button>
+                                (nzOnConfirm)="delAttence(data.id)" nzOkText="确认" nzCancelText="取消">撤销</button>
                         </ng-container>
                         <ng-template #saveTpl>
                             <button nz-button nzType="primary" (click)="saveEdit(data.id)">保存</button>
@@ -72,37 +62,31 @@
                     <td></td>
                     <td colspan="8">
                         <ng-container *ngIf="!editCache[data.id].edit; else descriptionTpl">
+                            <p *ngIf="data.ltype">请假类型：{{data.ltype}}</p>
                             <p>起止时间：{{data.stime}} ～ {{data.etime}}</p>
                             <p>知会人： {{data.notify}}</p>
                             {{data.description}}
                         </ng-container>
                         <ng-template #descriptionTpl>
+                            <p *ngIf="data.ltype">
+                                请假类型：
+                                <nz-select [(ngModel)]="data.ltype">
+                                    <nz-option nzValue="事假" nzLabel="事假"></nz-option>
+                                    <nz-option nzValue="病假" nzLabel="病假"></nz-option>
+                                </nz-select>
+                            </p>
                             <p>
                                 起止时间：
                                 <nz-range-picker [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"
-                                    (ngModelChange)="onChange($event)" 
-                                    [(ngModel)]="rangeData"
-                                    (nzOnOk)="onOk($event)"></nz-range-picker>
+                                    (ngModelChange)="onChange($event)" [(ngModel)]="rangeData" (nzOnOk)="onOk($event)">
+                                </nz-range-picker>
                             </p>
                             <p>
                                 知会人：
-                                <nz-tag *ngFor="let i of data.notify" nzMode="closeable" (nzOnClose)="onClose()"
-                                    (nzAfterClose)="afterClose()" (nzAfterClose)="handleClose(data.id,i)">{{i}}
-                                </nz-tag>
-                                <nz-mention [nzSuggestions]="empList" [nzValueWith]="valueWith"
-                                    (nzOnSelect)="onSelect($event)">
-                                    <input nz-input nzMentionTrigger nzSize="small" [(ngModel)]="inputValue"
-                                        placeholder="输入@选择新增知会人" (blur)="handleInputConfirm(data.id)"
-                                        (keydown.enter)="handleInputConfirm(data.id)" />
-                                    <ng-container *nzMentionSuggestion="let empList">
-                                        <nz-avatar nzSize="small" [nzText]="empList.name">
-                                        </nz-avatar>
-                                        <span>{{ empList.department }} - {{ empList.name }}</span>
-                                    </ng-container>
-                                </nz-mention>
-                                <input #inputElement nz-input nzSize="small" *ngIf="inputVisible" type="text"
-                                    [(ngModel)]="inputValue" (blur)="handleInputConfirm(data.notify)"
-                                    (keydown.enter)="handleInputConfirm(data.notify)" />
+                                <nz-select [(ngModel)]="data.notify" [nzSize]="size" nzMode="tags">
+                                    <nz-option *ngFor="let option of empList" [nzLabel]="option.name"
+                                        [nzValue]="option.name"></nz-option>
+                                </nz-select>
                             </p>
                             <textarea rows="4" nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }"
                                 [(ngModel)]="editCache[data.id].data.description"></textarea>
@@ -112,9 +96,92 @@
             </ng-template>
         </tbody>
     </nz-table>
-    <nz-modal nzWrapClassName="seal-application-modal" [(nzVisible)]="isVisible" nzTitle="用章申请"
-        (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzFooter]="null">
-        <app-seal-application #applyM [seal]="selectedSeal" (addSeal)="addSeal($event)" ref="applyM">
-        </app-seal-application>
+    <nz-modal nzWrapClassName="attence-application-modal" [(nzVisible)]="isVisible" nzTitle="考勤申请"
+        (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzFooter]="null" nzMaskClosable="false">
+        <div class="attence-apply">
+            <form nz-form [nzLayout]="'horizontal'" [formGroup]="validateForm"
+                (ngSubmit)="submitForm($event,validateForm.value)">
+                <nz-form-item>
+                    <nz-form-label nzRequired nz-col [nzSpan]="5">申请类型</nz-form-label>
+                    <nz-form-control nz-col [nzSpan]="18">
+                        <nz-radio-group formControlName="type" [(ngModel)]="radioType" [nzButtonStyle]="'solid'"
+                            (ngModelChange)="appShowLtype($event)">
+                            <label nz-radio-button nzValue="外勤">外勤</label>
+                            <label nz-radio-button nzValue="出差">出差</label>
+                            <label nz-radio-button nzValue="加班">加班</label>
+                            <label nz-radio-button nzValue="请假">请假</label>
+                        </nz-radio-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item *ngIf="appLtype">
+                    <nz-form-label nzRequired nz-col [nzSpan]="5">请假类型</nz-form-label>
+                    <nz-form-control nz-col [nzSpan]="18">
+                        <nz-select formControlName="ltype">
+                            <nz-option nzValue="事假" nzLabel="事假"></nz-option>
+                            <nz-option nzValue="病假" nzLabel="病假"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired nz-col [nzSpan]="5">起止时间</nz-form-label>
+                    <nz-form-control nz-col [nzSpan]="18">
+                        <nz-range-picker formControlName="timerange" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"
+                            [nzPlaceHolder]="['开始时间', '结束时间']" (ngModelChange)="onChange($event)"
+                            (nzOnOk)="onOk($event)"></nz-range-picker>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired nz-col [nzSpan]="5">申请事由</nz-form-label>
+                    <nz-form-control nz-col [nzSpan]="18">
+                        <textarea formControlName="description" rows="4" nz-input placeholder="申请需填写详细的信息，如申请类型+信息说明+时长"
+                            [(ngModel)]="ngDescription"></textarea>
+                        <nz-form-explain
+                            *ngIf="validateForm.get('description').dirty&&validateForm.get('description').hasError('required')">
+                            需要填写申请事由
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired nz-col [nzSpan]="5">申请人</nz-form-label>
+                    <nz-form-control nzHasFeedback nz-col [nzSpan]="18">
+                        <nz-select formControlName="propser" nzShowSearch nzAllowClear nzPlaceHolder="审核人姓名">
+                            <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                                <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                                </nz-option>
+                            </nz-option-group>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired nz-col [nzSpan]="5">部门负责人</nz-form-label>
+                    <nz-form-control nz-col [nzSpan]="18">
+                        <nz-select formControlName="pic" nzAllowClear nzPlaceHolder="部门负责人姓名">
+                            <nz-option-group *ngFor="let data of depList" [nzLabel]="data.name">
+                                <nz-option [nzValue]="data.pic" [nzLabel]="data.pic">
+                                </nz-option>
+                            </nz-option-group>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired nz-col [nzSpan]="5">审核人</nz-form-label>
+                    <nz-form-control nz-col [nzSpan]="18">
+                        <nz-select formControlName="auditor" nzShowSearch nzAllowClear nzPlaceHolder="审核人姓名">
+                            <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                                <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                                </nz-option>
+                            </nz-option-group>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nzType="flex" nzJustify="center">
+                    <nz-form-control>
+                        <button nz-button nzType="primary" [disabled]="!validateForm.valid"
+                            class="sumbitBtn">提交</button>
+                        <button nz-button (click)="resetForm($event)">重置</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </div>
     </nz-modal>
 </div>

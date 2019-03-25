@@ -10,6 +10,11 @@ nz-table {
         margin-right: 8px;
     }
     td {
+        p {
+            nz-select {
+                min-width: 100px;
+            }
+        }
         nz-mention {
             input {
                 height: 22px;
@@ -37,4 +42,13 @@ nz-table {
     height: 14px;
     margin-right: 8px;
     position: relative;
+}
+
+[nz-form] {
+    .hidden-item {
+        display: none;
+    }
+    .sumbitBtn {
+        margin-right: 8px;
+    }
 }

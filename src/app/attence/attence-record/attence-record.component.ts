@@ -1,9 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AttenceService } from '../attence.service';
 import { Attence } from '../attence';
-import { Employee } from 'src/app/team/team';
+import { Department, EmpInDep } from 'src/app/team/team';
 import { TeamService } from 'src/app/team/team.service';
 import { DatePipe } from '@angular/common';
+import {
+    FormGroup,
+    FormBuilder,
+    ValidationErrors,
+    Validators
+} from '@angular/forms';
 
 @Component({
     selector: 'app-attence-record',
@@ -11,38 +17,71 @@ import { DatePipe } from '@angular/common';
     styleUrls: ['./attence-record.component.less']
 })
 export class AttenceRecordComponent implements OnInit {
-
-    constructor(
-        private attenceService: AttenceService,
-        private teamService: TeamService,
-        private datePipe: DatePipe
-    ) { }
-
     attenceList: Attence[];
-    empList: Employee[];
+    depList: Department[];
+    empInDepList: EmpInDep[];
+
     mapOfExpandData = {};
     editCache: { [key: string]: any } = {};
 
     delTipTitle = "确认撤销申请吗？";
     canEditTipTitle = "确认取消编辑吗？";
+
     inputVisible = false;
     inputValue = '';
     rangeData: Date[];
 
-    //mention 建议选项的取值方法
-    valueWith = (data: Employee) => data.name;
+    validateForm: FormGroup;
+    isVisible = false;
+    appLtype = false;
+    dateNow = new Date();
+
     @ViewChild('inputElement') inputElement: ElementRef;
 
+    constructor(
+        private attenceService: AttenceService,
+        private teamService: TeamService,
+        private datePipe: DatePipe,
+        private fb: FormBuilder
+    ) {
+        this.validateForm = this.fb.group({
+            id: [''],
+            type: ['', [Validators.required]],
+            ltype: null,
+            pic: [''],
+            auditor: [''],
+            propser: ['', [Validators.required]],
+            notify: [[]],
+            description: ['', [Validators.required],],
+            time: [''],
+            timerange: [[]]
+        });
+    }
     // 获取数据
     getAttenceList(): void {
         this.attenceService.getAttenceList()
             .subscribe(attenceList => this.attenceList = attenceList);
         console.log(this.attenceList);
     }
-    getEmpList(): void {
-        this.teamService.getEmpList()
-            .subscribe(empList => this.empList = empList);
-        console.log(this.empList);
+    getDepList(): void {
+        this.teamService.getDepList()
+            .subscribe(depList => this.depList = depList);
+        console.log(this.depList);
+    }
+    getEmpInDep(): void {
+        this.teamService.getEmpInDep()
+            .subscribe(empInDepList => this.empInDepList = empInDepList);
+        console.log(this.empInDepList);
+    }
+
+    // 选择请假时显示请假类型
+    showLtype(data): void {
+        if (data.type == '请假') {
+            const index = this.attenceList.findIndex(item => item.id === data.id);
+            this.attenceList[index].type = '请假';
+            this.attenceList[index].ltype = '事假';
+            this.attenceList[index] = { ...this.attenceList[index] };
+        }
     }
 
     // 编辑操作
@@ -53,7 +92,7 @@ export class AttenceRecordComponent implements OnInit {
                 this.mapOfExpandData[id] = true;
                 let sd = this.stringTimeToDate(item.stime);
                 let ed = this.stringTimeToDate(item.etime);
-                this.rangeData = [sd, ed]; 
+                this.rangeData = [sd, ed];
             }
         });
     }
@@ -95,47 +134,6 @@ export class AttenceRecordComponent implements OnInit {
         });
     }
 
-    // 知会人标签操作
-    onClose(): void {
-        console.log('tag was closed.');
-    }
-
-    afterClose(): void {
-        console.log('after tag closed');
-    }
-
-    handleClose(id, removedTag: {}): void {
-        let tags;
-        this.attenceList.forEach(item => {
-            if (item.id == id) {
-                tags = item.notify;
-                tags = tags.filter(tag => tag !== removedTag);
-                item.notify = tags;
-            }
-        })
-    }
-
-    handleInputConfirm(id): void {
-        let tags;
-        this.attenceList.forEach(item => {
-            if (item.id == id) {
-                tags = item.notify;
-                if (this.inputValue && this.inputValue !== '@' && tags.indexOf(this.inputValue) === -1) {
-                    tags = [...tags, this.inputValue];
-                    item.notify = tags;
-                    console.log(tags);
-                }
-            }
-        });
-        this.inputValue = '';
-        this.inputVisible = false;
-    }
-
-    onSelect(value): void {
-        this.inputValue = value.name;
-        console.log(value);
-    }
-
     // 起止时间
     onChange(result: Date): void {
         console.log('Selected Time: ', result);
@@ -167,10 +165,65 @@ export class AttenceRecordComponent implements OnInit {
         return resDate;
     }
 
+    showModal(): void {
+        this.isVisible = true;
+    }
+    handleOk(): void {
+        console.log('click ok');
+        this.isVisible = false;
+    }
+
+    handleCancel(): void {
+        this.isVisible = false;
+    }
+
+    // 提交申请对话框
+
+    // 显示请假类型
+    appShowLtype(data): void {
+        if (data === '请假') {
+            this.appLtype = true;
+        } else {
+            this.appLtype = false;
+        }
+    }
+
+    // 提交
+    submitForm = ($event: any, value: any) => {
+        $event.preventDefault();
+        for (const key in this.validateForm.controls) {
+            if (key === 'time') {
+                value.time = this.datePipe.transform(this.dateNow, 'yyyy-MM-dd');
+                value.id = 123;
+            }
+            this.validateForm.controls[key].markAsDirty();
+            this.validateForm.controls[key].updateValueAndValidity();
+        }
+        this.handleOk();
+        this.addSeal(value);
+        console.log(value);
+    };
+
+    // 重置
+    resetForm(e: MouseEvent): void {
+        e.preventDefault();
+        this.validateForm.reset();
+        for (const key in this.validateForm.controls) {
+            this.validateForm.controls[key].markAsPristine();
+            this.validateForm.controls[key].updateValueAndValidity();
+        }
+    }
+    addSeal(data) {
+        this.isVisible = false;
+        this.attenceList = [...this.attenceList, data];
+        this.updateEditCache();
+    }
+
     ngOnInit() {
         this.getAttenceList();
         this.updateEditCache();
-        this.getEmpList();
+        this.getDepList();
+        this.getEmpInDep();
     }
 
 }
