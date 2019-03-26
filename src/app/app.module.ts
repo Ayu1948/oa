@@ -17,6 +17,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { TeamDepartmentComponent } from './team/team-department/team-department.component';
 import { TeamEmployeeComponent } from './team/team-employee/team-employee.component';
 import { AttenceRecordComponent } from './attence/attence-record/attence-record.component';
+import { TeamService } from './team/team.service';
 
 
 registerLocaleData(zh);
@@ -43,7 +44,7 @@ registerLocaleData(zh);
     //     InMemoryDataService, { dataEncapsulation: false }
     // )
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }],
+  providers: [{ provide: NZ_I18N, useValue: zh_CN }, TeamService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

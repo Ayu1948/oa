@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-team-employee',
@@ -24,10 +25,14 @@ export class TeamEmployeeComponent implements OnInit {
     // empInDepList: { [key: string]: any } = {};
     @Input() emp: Employee = null;
     // constructor(private teamService: TeamService) { }
+    public anyList: any;
 
     getEmpList(): void {
         this.teamService.getEmpList()
-            .subscribe(empList => this.empList = empList);
+            .subscribe(empList => {
+                this.empList = empList;
+                console.log(this.empList)
+            });
         // this.empList = this.teamService.getEmpList();
         console.log(this.empList);
     }
@@ -86,6 +91,7 @@ export class TeamEmployeeComponent implements OnInit {
     }
 
     constructor(
+        private http: HttpClient,
         private route: ActivatedRoute,
         private teamService: TeamService,
         private fb: FormBuilder
@@ -98,12 +104,6 @@ export class TeamEmployeeComponent implements OnInit {
             // confirm: ['', [this.confirmValidator]],
             comment: ['', [Validators.required]]
         });
-    }
-    ngOnInit() {
-        this.getEmpList();
-        this.getDepList();
-        this.getEmpInDep();
-        this.getEmpUrl();
     }
     getEmpId(id: number): void {
         console.log(id);
@@ -152,5 +152,24 @@ export class TeamEmployeeComponent implements OnInit {
         }
         console.log(this.emp);
     }
+    // 向服务器主动发送消息
+    sendMessagegToServer() {
+        this.teamService.sendMess("这是客户端发过来的消息");
+    }
 
+    ngOnInit() {
+        // 订阅服务器发来消息产生的流
+        this.teamService.creatObservableSocket("ws://localhost:8085")
+            .subscribe(
+                data => console.log(data),
+                err => console.log(err),
+                () => console.log("流已经结束")
+            )
+        this.getEmpList();
+        this.getDepList();
+        this.getEmpInDep();
+        this.getEmpUrl();
+        // this.http.get("/api/emp")
+        //     .subscribe(empList => this.empList = empList);
+    }
 }
