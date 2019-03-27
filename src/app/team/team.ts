@@ -1,7 +1,10 @@
 export class Employee {
     id: number;
     name: string;
-    department: string;    // 在职部门
+    sex: string;
+    department: string;     // 在职部门
+    position: string;       // 职务
+    birth: string;
 }
 
 export class Department {

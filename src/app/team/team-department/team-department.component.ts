@@ -17,17 +17,12 @@ export class TeamDepartmentComponent implements OnInit {
 
     getEmpList(): void {
         this.teamService.getEmpList()
-            .subscribe(empList => this.empList = empList);
-        // this.empList = this.teamService.getEmpList();
-        console.log(this.empList);
+            .subscribe((empList: Employee[]) => this.empList = empList);
     }
 
     getDepList(): void {
-        this.depList = [];
         this.teamService.getDepList()
-            .subscribe(depList => {this.depList = depList, console.log(depList)});
-        // this.depList = this.teamService.getDepList();
-        console.log(this.depList);
+            .subscribe((depList: Department[]) => this.depList = depList);
     }
 
     showElse(name): void {

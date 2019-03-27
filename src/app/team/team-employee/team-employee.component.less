@@ -1,16 +1,24 @@
 .logo {
-    height: 32px;
-    background: rgba(255, 255, 255, .2);
+    // height: 32px;
+    // background: rgba(255, 255, 255, .2);
     margin: 16px;
+    .addEmp {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }
 
 .team-employee {
     position: relative;
-    nz-side {
-        overflow: auto;
-        height: 100vh;
-        position: absolute;
-        left: 0
+    nz-sider {
+        // overflow: auto;
+        // height: 100vh;
+        // position: absolute;
+        // left: 0;
+        background: #fff;
+        nz-avatar {
+            vertical-align: middle;
+        }
     }
     .content-layout {
         margin-left: 200;
@@ -19,8 +27,7 @@
             overflow: initial;
             .content-div {
                 padding: 24px;
-                background: #fff;
-                text-align: center;
+                background: #fff; // text-align: center;
                 [nz-form] {
                     max-width: 600px;
                     .hiddenC {
@@ -32,6 +39,15 @@
                         text-align: left;
                         padding-left: 10px;
                         box-sizing: border-box;
+                    }
+                    .date-input {
+                        width: 100%;
+                    }
+                    nz-date-picker ::ng-deep .ant-calendar-picker {
+                        width: 100%;
+                    }
+                    nz-radio-group {
+                        margin-left: 5px;
                     }
                 }
                 button {

@@ -22,33 +22,32 @@ export class TeamEmployeeComponent implements OnInit {
     empList: Employee[];
     depList: Department[];
     empInDepList: EmpInDep[];
-    // empInDepList: { [key: string]: any } = {};
     @Input() emp: Employee = null;
+    sexValue = '男';
     // constructor(private teamService: TeamService) { }
-    public anyList: any;
 
     getEmpList(): void {
         this.teamService.getEmpList()
-            .subscribe(empList => {
+            .subscribe((empList: Employee[]) => {
                 this.empList = empList;
-                console.log(this.empList)
+                console.log(empList)
             });
         // this.empList = this.teamService.getEmpList();
-        console.log(this.empList);
     }
 
     getDepList(): void {
         this.teamService.getDepList()
-            .subscribe(depList => this.depList = depList);
-        // this.depList = this.teamService.getDepList();
-        console.log(this.depList);
+            .subscribe((depList: Department[]) => this.depList = depList);
     }
 
     getEmpInDep(): void {
         this.teamService.getEmpInDep()
-            .subscribe(empInDepList => this.empInDepList = empInDepList);
-        // this.empInDepList = this.teamService.getEmpInDep();
-        console.log(this.empInDepList);
+            .subscribe((empInDepList: EmpInDep[]) => this.empInDepList = empInDepList);
+    }
+    getEmpId(id: number): void {
+        this.emp = null;
+        this.teamService.getEmpId(id)
+            .subscribe((emp: Employee) => this.emp = emp);
     }
 
     validateForm: FormGroup;
@@ -58,7 +57,24 @@ export class TeamEmployeeComponent implements OnInit {
             this.validateForm.controls[key].markAsDirty();
             this.validateForm.controls[key].updateValueAndValidity();
         }
+        console.log(this.emp)
         console.log(value);
+        console.log(!(this.emp.name === value.name));
+        console.log(!(this.emp.birth === value.birth));
+        console.log(!(this.emp.department === value.department));
+        console.log(!(this.emp.sex === value.sex));
+        console.log(!(this.emp.position === value.position));
+        if (
+            !(this.emp.name === value.name) ||
+            !(this.emp.birth === value.birth) ||
+            !(this.emp.department === value.department) ||
+            !(this.emp.sex === value.sex) ||
+            !(this.emp.position === value.position)
+        ) {
+            this.saveEmp(value);
+        } else {
+            console.log("没有更改数据，不提交")
+        }
     }
 
     resetForm(e: MouseEvent): void {
@@ -70,7 +86,34 @@ export class TeamEmployeeComponent implements OnInit {
         }
     }
 
-    userNameAsyncValidator = (control: FormControl) => Observable.create((observer: Observer<ValidationErrors | null>) => {
+    saveEmp(data): void {
+        const index = this.empList.findIndex(item => item.id === data.id);
+        Object.assign(this.empList[index], data);
+        console.log("提交成功");
+    }
+
+    // 表单验证
+
+    // id
+    // userIdAsyncValidator = (control: FormControl) => Observable.create((observer: Observer<ValidationErrors | null>) => {
+    //     setTimeout(() => {
+    //         let red = false;
+    //         // for(let emp of this.empList) {
+    //         //     if (emp.id === control.value) {
+    //         //         red = true;
+    //         //         break;
+    //         //     }
+    //         // };
+    //         if (red) {
+    //             observer.next({ error: true, duplicated: true });
+    //         } else {
+    //             observer.next(null);
+    //         }
+    //         observer.complete();
+    //     }, 1000);
+    // })
+    // name
+    nameAsyncValidator = (control: FormControl) => Observable.create((observer: Observer<ValidationErrors | null>) => {
         setTimeout(() => {
             if (control.value === 'JasonWood') {
                 observer.next({ error: true, duplicated: true });
@@ -81,14 +124,14 @@ export class TeamEmployeeComponent implements OnInit {
         }, 1000);
     })
 
-    confirmValidator = (control: FormControl): { [s: string]: boolean } => {
-        if (!control.value) {
-            return { required: true };
-        } else if (control.value !== this.validateForm.controls.password.value) {
-            return { confirm: true, error: true };
-        }
-        return {};
-    }
+    // confirmValidator = (control: FormControl): { [s: string]: boolean } => {
+    //     if (!control.value) {
+    //         return { required: true };
+    //     } else if (control.value !== this.validateForm.controls.password.value) {
+    //         return { confirm: true, error: true };
+    //     }
+    //     return {};
+    // }
 
     constructor(
         private http: HttpClient,
@@ -97,61 +140,24 @@ export class TeamEmployeeComponent implements OnInit {
         private fb: FormBuilder
     ) {
         this.validateForm = this.fb.group({
-            userId: [''],
-            userName: ['', [Validators.required], [this.userNameAsyncValidator]],
-            email: ['', [Validators.email, Validators.required]],
-            // password: ['', [Validators.required]],
-            // confirm: ['', [this.confirmValidator]],
-            comment: ['', [Validators.required]]
+            id: ['', [Validators.required]],
+            name: ['', [Validators.required], [this.nameAsyncValidator]],
+            sex: ['', [Validators.required]],
+            birth: ['', [Validators.required]],
+            // email: ['', [Validators.email, Validators.required]],
+            department: ['', [Validators.required]],
+            position: ['', [Validators.required]]
         });
-    }
-    getEmpId(id: number): void {
-        console.log(id);
-        this.emp = null;
-        // if (id)
-        // const id = 
-        // this.emp = this.teamService.getEmp(id);
-        // if (id !== 0) {
-        this.empList.forEach(item => {
-            if (item.id === id) {
-                this.emp = item;
-            }
-        });
-        // } else {
-        //     this.empList.forEach(item => {
-        //         if (item.id === 301) {
-        //             this.emp = item;
-        //         }
-        //     });
-        // }
-
-        console.log(this.emp);
-        // this.teamService.getEmp(id)
-        //     .subscribe(emp => {
-        //         console.log(this.emp);
-        //         console.log(emp);
-        //         this.emp = emp;
-        //     });
-        // console.log(id);
     }
     getEmpUrl(): void {
-        this.emp = null;
+        // this.emp = null;
         const id = +this.route.snapshot.paramMap.get('id');
         if (id !== 0) {
-            this.empList.forEach(item => {
-                if (item.id === id) {
-                    this.emp = item;
-                }
-            });
-        } else {
-            this.empList.forEach(item => {
-                if (item.id === 301) {
-                    this.emp = item;
-                }
-            });
+            this.getEmpId(id);
         }
-        console.log(this.emp);
     }
+
+
     // 向服务器主动发送消息
     sendMessagegToServer() {
         this.teamService.sendMess("这是客户端发过来的消息");
@@ -169,7 +175,5 @@ export class TeamEmployeeComponent implements OnInit {
         this.getDepList();
         this.getEmpInDep();
         this.getEmpUrl();
-        // this.http.get("/api/emp")
-        //     .subscribe(empList => this.empList = empList);
     }
 }

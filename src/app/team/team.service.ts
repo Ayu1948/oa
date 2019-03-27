@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Employee, Department, EmpInDep } from './team';
-import { empList, depList } from './team-data';
+// import { empList, depList } from './team-data';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -18,34 +18,18 @@ export class TeamService {
 
     constructor(private http: HttpClient) { }
     getDepList(): Observable<Department[]> {
-        return of(depList);
+        // return of(depList);
+        return this.http.get<Department[]>("/api/dep");
     }
     getEmpList(): Observable<Employee[]> {
-        return of(empList);
-        // return this.http.get<Employee[]>("/api/emp");
+        // return of(empList);
+        return this.http.get<Employee[]>("/api/emp");
+    }
+    getEmpId(id: number): Observable<Employee> {
+        return this.http.get<Employee>("/api/emp/" + id);
     }
     getEmpInDep(): Observable<EmpInDep[]> {
-        let empInDepList: EmpInDep[] = [];
-        let empText: Employee[] = [];
-        for (const index in depList) {
-            empList.forEach(emp => {
-                if (emp.department === depList[index].name) {
-                    empText.push(emp);
-                    // console.log(emp)
-                }
-            });
-            empInDepList = [...empInDepList, {
-                id: depList[index].id,
-                name: depList[index].name,
-                pic: depList[index].pic,
-                total: depList[index].total,
-                tip: depList[index].tip,
-                emp: empText
-            }]
-            empText = [];
-        }
-        // console.log(empInDepList);
-        return of(empInDepList);
+        return this.http.get<EmpInDep[]>("/api/empInDep");
     }
 
     // 定义返回一个流，这个流包含了服务器返回的消息

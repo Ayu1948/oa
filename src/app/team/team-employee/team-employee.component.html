@@ -1,7 +1,8 @@
 <div class="team-employee">
     <nz-layout>
-        <nz-sider [nzTheme]="'light'">
+        <nz-sider>
             <div class="logo">
+                <button nz-button nzType="primary" class="addEmp" routerLink="/team-employee">新增员工</button>
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                     <input type="text" nz-input placeholder="input search text">
                 </nz-input-group>
@@ -9,7 +10,7 @@
                     <button nz-button nzType="primary" nzSearch><i nz-icon type="search"></i></button>
                 </ng-template>
             </div>
-            <ul nz-menu [nzTheme]="'light'" [nzMode]="'inline'">
+            <ul class="nav-ul" nz-menu [nzMode]="'inline'">
                 <li nz-submenu *ngFor="let item of empInDepList">
                     <span title>
                         <i nz-icon type="file"></i>
@@ -17,7 +18,11 @@
                     </span>
                     <ul>
                         <li nz-menu-item *ngFor="let item2 of item.emp">
-                            <a (click)="getEmpId(item2.id)" routerLink="/team-employee/item2.id">{{item2.name}}</a>
+                            <a (click)="getEmpId(item2.id)" routerLink="/team-employee/{{item2.id}}">
+                                <nz-avatar [nzText]="item2.id" nzSize="small"
+                                    [ngStyle]="{'background-color': '#40a9ff'}"></nz-avatar>
+                                {{item2.name}}
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -26,65 +31,180 @@
         <nz-layout class="content-layout">
             <nz-content>
                 <div class="content-div">
-                    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm($event, validateForm.value)">
-                        <nz-form-item>
-                            <nz-form-label [nzSpan]="7" nzRequired>工号</nz-form-label>
-                            <nz-form-control [nzSpan]="12" nzHasFeedback>
-                                <span class="span-text">{{emp.id}}</span>
-                                <input class="hiddenC" nz-input formControlName="userId" [(ngModel)]="emp.id">
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
-                            <nz-form-control [nzSpan]="12" nzHasFeedback>
-                                <input nz-input formControlName="userName"
-                                    placeholder="async validate try to write JasonWood" [(ngModel)]="emp.name">
-                                <nz-form-explain
-                                    *ngIf="validateForm.get('userName')?.dirty && validateForm.get('userName')?.errors || validateForm.get('userName')?.pending ">
-                                    <ng-container *ngIf="validateForm.get('userName')?.hasError('required')">
-                                        Please input your username!
-                                    </ng-container>
-                                    <ng-container *ngIf="validateForm.get('userName')?.hasError('duplicated')">
-                                        The username is redundant!
-                                    </ng-container>
-                                    <ng-container *ngIf="validateForm.get('userName')?.pending">
-                                        Validating...
-                                    </ng-container>
-                                </nz-form-explain>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-label [nzSpan]="7" nzRequired>E-mail</nz-form-label>
-                            <nz-form-control [nzSpan]="12" nzHasFeedback>
-                                <input nz-input formControlName="email" placeholder="email" type="email">
-                                <nz-form-explain
-                                    *ngIf="validateForm.get('email')?.dirty&&validateForm.get('email')?.errors">
-                                    <ng-container *ngIf="validateForm.get('email')?.hasError('email')">
-                                        The input is not valid E-mail!
-                                    </ng-container>
-                                    <ng-container *ngIf="validateForm.get('email')?.hasError('required')">
-                                        Please input your E-mail!
-                                    </ng-container>
-                                </nz-form-explain>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-label [nzSpan]="7" nzRequired>Comment</nz-form-label>
-                            <nz-form-control [nzSpan]="12">
-                                <textarea formControlName="comment" nz-input rows="2"
-                                    placeholder="write any thing"></textarea>
-                                <nz-form-explain
-                                    *ngIf="validateForm.get('comment')?.dirty&&validateForm.get('comment')?.hasError('required')">
-                                    Please write something here!</nz-form-explain>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-control [nzOffset]="7" [nzSpan]="12">
-                                <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
-                                <button nz-button (click)="resetForm($event)">Reset</button>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </form>
+                    <div class="show-emp" *ngIf="emp; else elseBlock">
+                        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm($event, validateForm.value)">
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7">工号</nz-form-label>
+                                <nz-form-control [nzSpan]="12">
+                                    <span class="span-text">{{emp.id}}</span>
+                                    <input class="hiddenC" nz-input formControlName="id" [(ngModel)]="emp.id">
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <input nz-input formControlName="name" [(ngModel)]="emp.name">
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('name')?.dirty && validateForm.get('name')?.errors || validateForm.get('name')?.pending ">
+                                        <ng-container *ngIf="validateForm.get('name')?.hasError('required')">
+                                            Please input your name!
+                                        </ng-container>
+                                        <ng-container *ngIf="validateForm.get('name')?.hasError('duplicated')">
+                                            The name is redundant!
+                                        </ng-container>
+                                        <ng-container *ngIf="validateForm.get('name')?.pending">
+                                            Validating...
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>出生日期</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <nz-date-picker class="date-input" formControlName="birth" [nzShowToday]="false"
+                                        [(ngModel)]="emp.birth">
+                                    </nz-date-picker>
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('birth')?.dirty && validateForm.get('birth')?.errors">
+                                        <ng-container *ngIf="validateForm.get('birth')?.hasError('required')">
+                                            请选择出生日期！
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
+                                <nz-form-control [nzSpan]="12">
+                                    <nz-radio-group [(ngModel)]="emp.sex" formControlName="sex">
+                                        <label nz-radio nzValue="男">男</label>
+                                        <label nz-radio nzValue="女">女</label>
+                                    </nz-radio-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>所属部门</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <nz-select formControlName="department" [(ngModel)]="emp.department">
+                                        <nz-option *ngFor="let dep of depList" [nzValue]="dep.name"
+                                            [nzLabel]="dep.name"></nz-option>
+                                    </nz-select>
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('department')?.dirty && validateForm.get('department')?.errors">
+                                        <ng-container *ngIf="validateForm.get('department')?.hasError('required')">
+                                            请选择所属部门！
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>职务</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <input nz-input formControlName="position" [(ngModel)]="emp.position">
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('position')?.dirty && validateForm.get('position')?.errors">
+                                        <ng-container *ngIf="validateForm.get('position')?.hasError('required')">
+                                            请填写职务！
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-control [nzOffset]="7" [nzSpan]="12">
+                                    <button nz-button nzType="primary" [disabled]="!validateForm.valid">编辑</button>
+                                    <button nz-button (click)="resetForm($event)">重置</button>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </form>
+                    </div>
+                    <ng-template #elseBlock class="add-emp">
+                        <form nz-form [formGroup]="validateForm" (ngSubmit)="addForm($event, validateForm.value)">
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>工号</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <input nz-input formControlName="id">
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('id')?.dirty && validateForm.get('id')?.errors">
+                                        <ng-container *ngIf="validateForm.get('id')?.hasError('required')">
+                                            请填写工号！
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <input nz-input formControlName="name">
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('name')?.dirty && validateForm.get('name')?.errors || validateForm.get('name')?.pending ">
+                                        <ng-container *ngIf="validateForm.get('name')?.hasError('required')">
+                                            Please input your name!
+                                        </ng-container>
+                                        <ng-container *ngIf="validateForm.get('name')?.hasError('duplicated')">
+                                            The name is redundant!
+                                        </ng-container>
+                                        <ng-container *ngIf="validateForm.get('name')?.pending">
+                                            Validating...
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>出生日期</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <nz-date-picker class="date-input" formControlName="birth" [nzShowToday]="false">
+                                    </nz-date-picker>
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('birth')?.dirty && validateForm.get('birth')?.errors">
+                                        <ng-container *ngIf="validateForm.get('birth')?.hasError('required')">
+                                            请选择出生日期！
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
+                                <nz-form-control [nzSpan]="12">
+                                    <nz-radio-group [(ngModel)]="sexValue" formControlName="sex">
+                                        <label nz-radio nzValue="男">男</label>
+                                        <label nz-radio nzValue="女">女</label>
+                                    </nz-radio-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>所属部门</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <nz-select formControlName="department">
+                                        <nz-option *ngFor="let dep of depList" [nzValue]="dep.name"
+                                            [nzLabel]="dep.name"></nz-option>
+                                    </nz-select>
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('department')?.dirty && validateForm.get('department')?.errors">
+                                        <ng-container *ngIf="validateForm.get('department')?.hasError('required')">
+                                            请选择所属部门！
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="7" nzRequired>职务</nz-form-label>
+                                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                                    <input nz-input formControlName="position">
+                                    <nz-form-explain
+                                        *ngIf="validateForm.get('position')?.dirty && validateForm.get('position')?.errors">
+                                        <ng-container *ngIf="validateForm.get('position')?.hasError('required')">
+                                            请填写职务！
+                                        </ng-container>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-control [nzOffset]="7" [nzSpan]="12">
+                                    <button nz-button nzType="primary" [disabled]="!validateForm.valid">添加</button>
+                                    <button nz-button (click)="resetForm($event)">重置</button>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </form>
+                    </ng-template>
                 </div>
             </nz-content>
         </nz-layout>
