@@ -1,6 +1,31 @@
 .box {
-    background: #ECECEC;
-    padding:30px;
+    .btn-box {
+        margin-bottom: 10px;
+        button {
+            margin-right: 8px;
+        }
+    }
+    .card-box {
+        background: #ECECEC;
+        padding: 30px;
+        max-height: 520px;
+        overflow-y: scroll;
+        nz-card {
+            margin-bottom: 8px;
+        }
+    }
+}
+
+[nz-form] {
+    [nzRequired] {
+        margin-right: 50px;
+    }
+    .hidden-item {
+        display: none;
+    }
+    .sumbitBtn {
+        margin-right: 8px;
+    }
 }
 
 .itemList {

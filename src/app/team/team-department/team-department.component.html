@@ -1,32 +1,37 @@
 <div class="box">
-    <div nz-row [nzGutter]="6">
-        <div nz-col [nzSpan]="6" *ngFor="let data of depList">
-            <!-- <nz-card >
-                <p>负责人：{{data.pic}}</p>
-                <p>总人数：{{data.total}}</p>
-                <p>详情 ：{{data.tip}}</p>
-            </nz-card> -->
-            <nz-card [nzCover]="coverTemplate" [nzActions]="[actionSetting,actionEdit,actionEllipsis]" [nzHoverable]="true">
-                <nz-card-meta [nzTitle]="data.name" [nzDescription]="data.tip" [nzAvatar]="avatarTemplate">
-                </nz-card-meta>
-            </nz-card>
-            <ng-template #avatarTemplate>
-                <nz-avatar nzSrc="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
-            </ng-template>
-            <ng-template #coverTemplate>
-                <img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
-            </ng-template>
-            <ng-template #actionSetting>
-                <i nz-icon type="file" (click)="showElse(data.name)">成员</i>
-            </ng-template>
-            <ng-template #actionEdit>
-                <i nz-icon type="file">编辑</i>
-            </ng-template>
-            <ng-template #actionEllipsis>
-                <i nz-icon type="ellipsis"></i>
-            </ng-template>
+    <div class="btn-box">
+        <button nz-button nzType="primary" (click)="showAddModal()">新增部门</button>
+    </div>
+    <div class="card-box">
+        <div nz-row [nzGutter]="6">
+            <div nz-col [nzSpan]="6" *ngFor="let data of empInDepList">
+                <nz-card [nzCover]="coverTemplate" [nzActions]="[actionSetting,actionEdit,actionEllipsis]"
+                    [nzHoverable]="true">
+                    <nz-card-meta [nzTitle]="data.name" [nzDescription]="data.tip" [nzAvatar]="avatarTemplate">
+                    </nz-card-meta>
+                </nz-card>
+                <ng-template #avatarTemplate>
+                    <nz-avatar [nzText]="data.pic" [ngStyle]="{'background-color': '#40a9ff'}"
+                        routerLink="/team-employee/{{data.picId}}"></nz-avatar>
+                </ng-template>
+                <ng-template #coverTemplate>
+                    <img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
+                </ng-template>
+                <ng-template #actionSetting>
+                    <!-- <i nz-icon type="file" (click)="showElse(data.name)">成员</i> -->
+                    <span (click)="showElse(data.name)">成员</span>
+                </ng-template>
+                <ng-template #actionEdit>
+                    <!-- <i nz-icon type="file">编辑</i> -->
+                    <span (click)="showAddModal(data.name)">编辑</span>
+                </ng-template>
+                <ng-template #actionEllipsis>
+                    <i nz-icon type="ellipsis"></i>
+                </ng-template>
+            </div>
         </div>
     </div>
+
 </div>
 <!-- <div class="box" *ngIf="eName">
     <div nz-row [nzGutter]="8">
@@ -42,8 +47,9 @@
         </div>
     </div>
 </div> -->
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="eName + ' 部门人员'" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzFooter]="null">
-    <nz-list [nzDataSource]="empList" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="eName + ' 部门人员'" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+    [nzFooter]="null">
+    <nz-list [nzDataSource]="emp" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
         <ng-template #item let-item>
             <nz-list-item *ngIf="item.department === eName">
                 <nz-list-item-meta [nzTitle]="nzTitle"
@@ -56,4 +62,133 @@
             </nz-list-item>
         </ng-template>
     </nz-list>
+</nz-modal>
+<nz-modal [(nzVisible)]="isAddVisble" [(nzTitle)]="addTitle" (nzOnCancel)="handleAddCancel()" (nzOnOk)="handleAddOk()"
+    [nzFooter]="null" [nzMaskClosable]="false">
+    <div class="dep-dep" *ngIf="depNow; else addDepTpl">
+        <form nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
+            (ngSubmit)="submitForm($event,validateForm.value)">
+            <nz-form-item>
+                <nz-form-label nzRequired>部门名</nz-form-label>
+                <nz-form-control nzHasFeedback>
+                    <input nz-input formControlName="name" placeholder="部门名"
+                        [(ngModel)]="depNow.name">
+                    <nz-form-explain
+                        *ngIf="validateForm.get('name').dirty && validateForm.get('name').errors || validateForm.get('name').pending ">
+                        <ng-container *ngIf="validateForm.get('name').hasError('required')">
+                            请输入部门名!
+                        </ng-container>
+                        <ng-container *ngIf="validateForm.get('name').hasError('duplicated')">
+                            部门名重复！
+                        </ng-container>
+                        <ng-container *ngIf="validateForm.get('name').pending">
+                            Validating...
+                        </ng-container>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>部门负责人</nz-form-label>
+                <nz-form-control>
+                    <nz-select formControlName="pic" [(ngModel)]="depNow.pic" nzAllowClear nzPlaceHolder="选择部门负责人"
+                        (ngModelChange)="defaultEmp($event)">
+                        <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                            <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                            </nz-option>
+                        </nz-option-group>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>部门成员</nz-form-label>
+                <nz-form-control>
+                    <nz-select formControlName="emp" [(ngModel)]="empInDepNow" [nzSize]="size" nzMode="tags">
+                        <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                            <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                            </nz-option>
+                        </nz-option-group>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>其他详情</nz-form-label>
+                <nz-form-control>
+                    <textarea formControlName="tip" rows="4" nz-input placeholder="部门其他信息说明"
+                        [(ngModel)]="depNow.tip"></textarea>
+                    <nz-form-explain
+                        *ngIf="validateForm.get('tip').dirty&&validateForm.get('tip').hasError('required')">
+                        需要填写部门其他信息说明
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nzType="flex" nzJustify="center">
+                <nz-form-control>
+                    <button nz-button nzType="primary" [disabled]="!validateForm.valid" class="sumbitBtn">提交</button>
+                    <button nz-button (click)="resetForm($event)">重置</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+    <ng-template #addDepTpl>
+        <form nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
+            (ngSubmit)="submitForm($event,validateForm.value)">
+            <nz-form-item>
+                <nz-form-label nzRequired>部门名</nz-form-label>
+                <nz-form-control nzHasFeedback>
+                    <input nz-input formControlName="name" placeholder="部门名">
+                    <nz-form-explain
+                        *ngIf="validateForm.get('name').dirty && validateForm.get('name').errors || validateForm.get('name').pending ">
+                        <ng-container *ngIf="validateForm.get('name').hasError('required')">
+                            请输入部门名!
+                        </ng-container>
+                        <ng-container *ngIf="validateForm.get('name').hasError('duplicated')">
+                            部门名重复！
+                        </ng-container>
+                        <ng-container *ngIf="validateForm.get('name').pending">
+                            Validating...
+                        </ng-container>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>部门负责人</nz-form-label>
+                <nz-form-control>
+                    <nz-select formControlName="pic" nzAllowClear nzPlaceHolder="选择部门负责人"
+                        (ngModelChange)="defaultEmp($event)">
+                        <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                            <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                            </nz-option>
+                        </nz-option-group>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>部门成员</nz-form-label>
+                <nz-form-control>
+                    <nz-select formControlName="emp" [ngModel]="empInDepNow" [nzSize]="size" nzMode="tags">
+                        <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
+                            <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                            </nz-option>
+                        </nz-option-group>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>其他详情</nz-form-label>
+                <nz-form-control>
+                    <textarea formControlName="tip" rows="4" nz-input placeholder="部门其他信息说明"></textarea>
+                    <nz-form-explain
+                        *ngIf="validateForm.get('tip').dirty&&validateForm.get('tip').hasError('required')">
+                        需要填写部门其他信息说明
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nzType="flex" nzJustify="center">
+                <nz-form-control>
+                    <button nz-button nzType="primary" [disabled]="!validateForm.valid" class="sumbitBtn">添加</button>
+                    <button nz-button (click)="resetForm($event)">重置</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </ng-template>
 </nz-modal>

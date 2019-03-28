@@ -37,13 +37,13 @@
                                 <nz-form-label [nzSpan]="7">工号</nz-form-label>
                                 <nz-form-control [nzSpan]="12">
                                     <span class="span-text">{{emp.id}}</span>
-                                    <input class="hiddenC" nz-input formControlName="id" [(ngModel)]="emp.id">
+                                    <input class="hiddenC" nz-input formControlName="id" [ngModel]="emp.id">
                                 </nz-form-control>
                             </nz-form-item>
                             <nz-form-item>
                                 <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
                                 <nz-form-control [nzSpan]="12" nzHasFeedback>
-                                    <input nz-input formControlName="name" [(ngModel)]="emp.name">
+                                    <input nz-input formControlName="name" [ngModel]="emp.name">
                                     <nz-form-explain
                                         *ngIf="validateForm.get('name')?.dirty && validateForm.get('name')?.errors || validateForm.get('name')?.pending ">
                                         <ng-container *ngIf="validateForm.get('name')?.hasError('required')">
@@ -62,7 +62,7 @@
                                 <nz-form-label [nzSpan]="7" nzRequired>出生日期</nz-form-label>
                                 <nz-form-control [nzSpan]="12" nzHasFeedback>
                                     <nz-date-picker class="date-input" formControlName="birth" [nzShowToday]="false"
-                                        [(ngModel)]="emp.birth">
+                                        [ngModel]="emp.birth">
                                     </nz-date-picker>
                                     <nz-form-explain
                                         *ngIf="validateForm.get('birth')?.dirty && validateForm.get('birth')?.errors">
@@ -75,7 +75,7 @@
                             <nz-form-item>
                                 <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
                                 <nz-form-control [nzSpan]="12">
-                                    <nz-radio-group [(ngModel)]="emp.sex" formControlName="sex">
+                                    <nz-radio-group [ngModel]="emp.sex" formControlName="sex">
                                         <label nz-radio nzValue="男">男</label>
                                         <label nz-radio nzValue="女">女</label>
                                     </nz-radio-group>
@@ -84,7 +84,7 @@
                             <nz-form-item>
                                 <nz-form-label [nzSpan]="7" nzRequired>所属部门</nz-form-label>
                                 <nz-form-control [nzSpan]="12" nzHasFeedback>
-                                    <nz-select formControlName="department" [(ngModel)]="emp.department">
+                                    <nz-select formControlName="department" [ngModel]="emp.department">
                                         <nz-option *ngFor="let dep of depList" [nzValue]="dep.name"
                                             [nzLabel]="dep.name"></nz-option>
                                     </nz-select>
@@ -99,7 +99,7 @@
                             <nz-form-item>
                                 <nz-form-label [nzSpan]="7" nzRequired>职务</nz-form-label>
                                 <nz-form-control [nzSpan]="12" nzHasFeedback>
-                                    <input nz-input formControlName="position" [(ngModel)]="emp.position">
+                                    <input nz-input formControlName="position" [ngModel]="emp.position">
                                     <nz-form-explain
                                         *ngIf="validateForm.get('position')?.dirty && validateForm.get('position')?.errors">
                                         <ng-container *ngIf="validateForm.get('position')?.hasError('required')">

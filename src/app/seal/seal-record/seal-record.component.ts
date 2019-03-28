@@ -16,8 +16,6 @@ export class SealRecordComponent implements OnInit {
     editCache: { [key: string]: any } = {};
     sealList: Seal[];
     isVisible = false;
-    selectedSeal: Seal;
-    resetMB = false;
     delSealTipTitle = '确认撤销这条申请吗?';
     canEditTipTitle = '确认取消编辑吗?';
     constructor(private nzMessageService: NzMessageService, private sealService: SealService) { }
@@ -93,7 +91,6 @@ export class SealRecordComponent implements OnInit {
     // }
 
     showApplyModal() {
-        // this.selectedSeal = undefined;  // 重置窗口
         this.showModal();
     }
     startEdit(id): void {

@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
     selector: 'app-team-employee',
@@ -47,37 +47,46 @@ export class TeamEmployeeComponent implements OnInit {
     getEmpId(id: number): void {
         this.emp = null;
         this.teamService.getEmpId(id)
-            .subscribe((emp: Employee) => this.emp = emp);
+            .subscribe((emp: Employee) => { this.emp = emp; });
     }
 
     validateForm: FormGroup;
     submitForm = ($event: any, value: any) => {
+        console.log(this.emp);
+        let subFlag = false;
         $event.preventDefault();
         for (const key in this.validateForm.controls) {
             this.validateForm.controls[key].markAsDirty();
             this.validateForm.controls[key].updateValueAndValidity();
         }
-        console.log(this.emp)
-        console.log(value);
-        console.log(!(this.emp.name === value.name));
-        console.log(!(this.emp.birth === value.birth));
-        console.log(!(this.emp.department === value.department));
-        console.log(!(this.emp.sex === value.sex));
-        console.log(!(this.emp.position === value.position));
-        if (
-            !(this.emp.name === value.name) ||
-            !(this.emp.birth === value.birth) ||
-            !(this.emp.department === value.department) ||
-            !(this.emp.sex === value.sex) ||
-            !(this.emp.position === value.position)
-        ) {
+        this.sendMessagegToServer(value);
+        for (const key in value) {
+            if (!(this.emp[key] === value[key])) {
+                subFlag = true;
+            }
+        }
+        if (subFlag) {
             this.saveEmp(value);
+            this.sendMessagegToServer(value);
+            this.message.create('success', '员工数据修改成功');
         } else {
             console.log("没有更改数据，不提交")
+            this.message.create('warning', '没有更改数据，不提交');
         }
     }
 
+
     resetForm(e: MouseEvent): void {
+        e.preventDefault();
+        // this.validateForm.reset();
+        for (const key in this.validateForm.controls) {
+            this.validateForm.controls[key] = this.emp[key];
+            this.validateForm.controls[key].markAsPristine();
+            this.validateForm.controls[key].updateValueAndValidity();
+        }
+    }
+
+    resetAddForm(e: MouseEvent): void {
         e.preventDefault();
         this.validateForm.reset();
         for (const key in this.validateForm.controls) {
@@ -134,7 +143,7 @@ export class TeamEmployeeComponent implements OnInit {
     // }
 
     constructor(
-        private http: HttpClient,
+        private message: NzMessageService,
         private route: ActivatedRoute,
         private teamService: TeamService,
         private fb: FormBuilder
@@ -159,10 +168,10 @@ export class TeamEmployeeComponent implements OnInit {
 
 
     // 向服务器主动发送消息
-    sendMessagegToServer() {
+    sendMessagegToServer(msg) {
         this.teamService.sendMess("这是客户端发过来的消息");
+        this.teamService.sendMess(msg);
     }
-
     ngOnInit() {
         // 订阅服务器发来消息产生的流
         this.teamService.creatObservableSocket("ws://localhost:8085")
