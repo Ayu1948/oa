@@ -221,9 +221,13 @@ export class AttenceRecordComponent implements OnInit {
 
     ngOnInit() {
         this.getAttenceList();
-        this.updateEditCache();
+        // this.updateEditCache();
         this.getDepList();
         this.getEmpInDep();
+        setTimeout(() => {
+            this.updateEditCache();
+            console.log(this.attenceList);
+        }, 1000);
     }
 
 }

@@ -26,7 +26,8 @@
                     <span (click)="showAddModal(data.name)">编辑</span>
                 </ng-template>
                 <ng-template #actionEllipsis>
-                    <i nz-icon type="ellipsis"></i>
+                        <!-- <i nz-icon type="ellipsis"></i> -->
+                    <span nz-popconfirm nzTitle="确认删除?" (nzOnConfirm)="delDep(data.id)" nzPlacement="bottom">删除</span>
                 </ng-template>
             </div>
         </div>
@@ -51,7 +52,7 @@
     [nzFooter]="null">
     <nz-list [nzDataSource]="emp" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
         <ng-template #item let-item>
-            <nz-list-item *ngIf="item.department === eName">
+            <nz-list-item>
                 <nz-list-item-meta [nzTitle]="nzTitle"
                     nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                     [nzDescription]="item.id">
@@ -67,12 +68,11 @@
     [nzFooter]="null" [nzMaskClosable]="false">
     <div class="dep-dep" *ngIf="depNow; else addDepTpl">
         <form nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
-            (ngSubmit)="submitForm($event,validateForm.value)">
+            (ngSubmit)="submitForm($event,validateForm.value,'edit')">
             <nz-form-item>
                 <nz-form-label nzRequired>部门名</nz-form-label>
                 <nz-form-control nzHasFeedback>
-                    <input nz-input formControlName="name" placeholder="部门名"
-                        [(ngModel)]="depNow.name">
+                    <input nz-input formControlName="name" placeholder="部门名" [ngModel]="depNow.name">
                     <nz-form-explain
                         *ngIf="validateForm.get('name').dirty && validateForm.get('name').errors || validateForm.get('name').pending ">
                         <ng-container *ngIf="validateForm.get('name').hasError('required')">
@@ -90,8 +90,7 @@
             <nz-form-item>
                 <nz-form-label nzRequired>部门负责人</nz-form-label>
                 <nz-form-control>
-                    <nz-select formControlName="pic" [(ngModel)]="depNow.pic" nzAllowClear nzPlaceHolder="选择部门负责人"
-                        (ngModelChange)="defaultEmp($event)">
+                    <nz-select formControlName="pic" [ngModel]="depNow.pic" nzAllowClear nzPlaceHolder="选择部门负责人">
                         <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
                             <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
                             </nz-option>
@@ -102,7 +101,7 @@
             <nz-form-item>
                 <nz-form-label nzRequired>部门成员</nz-form-label>
                 <nz-form-control>
-                    <nz-select formControlName="emp" [(ngModel)]="empInDepNow" [nzSize]="size" nzMode="tags">
+                    <nz-select formControlName="emp" [ngModel]="empInDepNow" [nzSize]="size" nzMode="tags">
                         <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
                             <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
                             </nz-option>
@@ -114,7 +113,7 @@
                 <nz-form-label nzRequired>其他详情</nz-form-label>
                 <nz-form-control>
                     <textarea formControlName="tip" rows="4" nz-input placeholder="部门其他信息说明"
-                        [(ngModel)]="depNow.tip"></textarea>
+                        [ngModel]="depNow.tip"></textarea>
                     <nz-form-explain
                         *ngIf="validateForm.get('tip').dirty&&validateForm.get('tip').hasError('required')">
                         需要填写部门其他信息说明
@@ -124,14 +123,14 @@
             <nz-form-item nzType="flex" nzJustify="center">
                 <nz-form-control>
                     <button nz-button nzType="primary" [disabled]="!validateForm.valid" class="sumbitBtn">提交</button>
-                    <button nz-button (click)="resetForm($event)">重置</button>
+                    <button nz-button (click)="resetForm($event,'edit')">重置</button>
                 </nz-form-control>
             </nz-form-item>
         </form>
     </div>
     <ng-template #addDepTpl>
         <form nz-form [nzLayout]="Vertical" [formGroup]="validateForm"
-            (ngSubmit)="submitForm($event,validateForm.value)">
+            (ngSubmit)="submitForm($event,validateForm.value,'add')">
             <nz-form-item>
                 <nz-form-label nzRequired>部门名</nz-form-label>
                 <nz-form-control nzHasFeedback>
@@ -186,7 +185,7 @@
             <nz-form-item nzType="flex" nzJustify="center">
                 <nz-form-control>
                     <button nz-button nzType="primary" [disabled]="!validateForm.valid" class="sumbitBtn">添加</button>
-                    <button nz-button (click)="resetForm($event)">重置</button>
+                    <button nz-button (click)="resetForm($event,'add')">重置</button>
                 </nz-form-control>
             </nz-form-item>
         </form>

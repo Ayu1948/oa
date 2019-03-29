@@ -20,12 +20,12 @@ export class SealRecordComponent implements OnInit {
     canEditTipTitle = '确认取消编辑吗?';
     constructor(private nzMessageService: NzMessageService, private sealService: SealService) { }
     getSealList(): void {
-        this.sealList = this.sealService.getSealList();
-        // this.sealService.getSealList()
-        //     .subscribe(sealList => {
-        //         this.sealList = sealList;
-        //         console.log(sealList);
-        //     });
+        // this.sealList = this.sealService.getSealList();
+        this.sealService.getSealList()
+            .subscribe(sealList => {
+                this.sealList = sealList;
+                console.log(sealList);
+            });
         // console.log(this.sealService.getSealList());
     }
     // sealList = [
@@ -156,7 +156,9 @@ export class SealRecordComponent implements OnInit {
     }
     ngOnInit() {
         this.getSealList();
-        this.updateEditCache();
+        setTimeout(() => {
+            this.updateEditCache();
+        }, 1000);
     }
 
 }

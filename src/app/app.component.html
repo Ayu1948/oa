@@ -12,7 +12,34 @@
         <nz-layout>
             <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'" [nzCollapsedWidth]="0"
                 [nzZeroTrigger]="zeroTrigger">
-                <div class="slide-top"></div>
+                <div class="slide-top">
+                    <ul>
+                        <li>
+                            <div>
+                                <a>
+                                    <span>签到</span>
+                                    <p><b>1</b>次</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a>
+                                    <span>迟到</span>
+                                    <p><b>1</b>次</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a>
+                                    <span>请假</span>
+                                    <p><b>1</b>次</p>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <ul class="left-nav" nz-menu [nzMode]="'inline'" nzTheme='dark' [nzInlineCollapsed]="isCollapsed">
                     <li nz-submenu nz-tooltip nzPlacement="right">
                         <span title>

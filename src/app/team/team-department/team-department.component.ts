@@ -9,6 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
     selector: 'app-team-department',
@@ -19,7 +20,8 @@ export class TeamDepartmentComponent implements OnInit {
 
     empInDepList: EmpInDep[] = [];
     eName: string;
-    emp: Employee = null;
+    empList: Employee[] = [];
+    emp: Employee[] = [];
     isVisible = false;
     isAddVisble = false;
     isAdd = false;
@@ -29,10 +31,10 @@ export class TeamDepartmentComponent implements OnInit {
     editCache: { [key: string]: any } = {};
     validateForm: FormGroup;
 
-    // getEmpList(): void {
-    //     this.teamService.getEmpList()
-    //         .subscribe((empList: Employee[]) => this.empList = empList);
-    // }
+    getEmpList(): void {
+        this.teamService.getEmpList()
+            .subscribe((empList: Employee[]) => this.empList = empList);
+    }
 
     // getDepList(): void {
     //     this.teamService.getDepList()
@@ -46,12 +48,12 @@ export class TeamDepartmentComponent implements OnInit {
     showElse(name): void {
         this.showModal();
         this.eName = name;
+        console.log(this.empInDepList);
         this.empInDepList.forEach(item => {
-            item.emp.forEach(emp => {
-                if (emp.department == name) {
-                    this.emp = emp;
-                }
-            });
+            if (item.name === name) {
+                this.emp = item.emp;
+                console.log(this.emp)
+            }
         });
     }
 
@@ -69,13 +71,29 @@ export class TeamDepartmentComponent implements OnInit {
         this.eName = '';
         this.isVisible = false;
     }
-    resetForm(e: MouseEvent): void {
+    resetForm(e: MouseEvent, type: string): void {
         e.preventDefault();
-        this.validateForm.reset();
-        // tslint:disable-next-line: forin
-        for (const key in this.validateForm.controls) {
-            this.validateForm.controls[key].markAsPristine();
-            this.validateForm.controls[key].updateValueAndValidity();
+        let flag = false;
+        if (type === 'edit') {
+            flag = true;
+        }
+        if (flag) {
+            const depNow = JSON.stringify(this.depNow);
+            let empText = [],
+                depText = JSON.parse(depNow);
+            depText.emp.forEach(dep => {
+                empText = [...empText, dep.name];
+            });
+            depText.emp = empText;
+            this.empInDepNow = depText.emp;
+            this.validateForm.reset(depText);
+        } else {
+            this.validateForm.reset();
+            // tslint:disable-next-line: forin
+            for (const key in this.validateForm.controls) {
+                this.validateForm.controls[key].markAsPristine();
+                this.validateForm.controls[key].updateValueAndValidity();
+            }
         }
     };
     depNameAsyncValidator = (control: FormControl) => Observable.create((observer: Observer<ValidationErrors>) => {
@@ -93,27 +111,57 @@ export class TeamDepartmentComponent implements OnInit {
             observer.complete();
         }, 500);
     });
-    submitForm = ($event, value) => {
+    submitForm = ($event, value, type) => {
         $event.preventDefault();
         // tslint:disable-next-line: forin
+        let flag = false;
+        if (type === 'add') {
+            flag = true;
+        }
         for (const key in this.validateForm.controls) {
-            let id = 0;
+            this.validateForm.controls[key].markAsDirty();
+            this.validateForm.controls[key].updateValueAndValidity();
+        }
+        if (flag) {
+            let id = 0,
+                picId = 0,
+                empText = [];
             this.empInDepList.forEach(item => {
                 if (id < item.id) {
                     id = item.id;
                 }
+                item.emp.forEach(emp => {
+                    value.emp.forEach(emp2 => {
+                        if (emp.name == emp2) {
+                            empText = [...empText, emp];
+                        }
+                    })
+                    if (emp.name === value.pic) {
+                        picId = emp.id;
+                    }
+                })
             });
             value.id = id + 1;
-            this.validateForm.controls[key].markAsDirty();
-            this.validateForm.controls[key].updateValueAndValidity();
+            value.emp = empText;
+            value.picId = picId;
+            value.total = empText.length;
+            this.addDep(value);
+            this.resetForm($event, 'add');
         }
-        this.addDep(value);
-        this.resetForm($event);
         console.log(value);
     }
     addDep(data): void {
         this.handleAddOk();
         this.empInDepList = [...this.empInDepList, data];
+    }
+    delDep(id) {
+        // 撤销申请
+        this.empInDepList.forEach(element => {
+            if (element.id === id) {
+                this.empInDepList = this.empInDepList.filter(d => d.id !== id);
+                this.nzMessageService.info('删除成功');
+            }
+        });
     }
     showAddModal(data): void {
         this.empInDepNow = [];
@@ -152,7 +200,8 @@ export class TeamDepartmentComponent implements OnInit {
     }
     constructor(
         private fb: FormBuilder,
-        private teamService: TeamService
+        private teamService: TeamService,
+        private nzMessageService: NzMessageService
     ) {
         this.validateForm = this.fb.group({
             id: [''],
@@ -165,7 +214,7 @@ export class TeamDepartmentComponent implements OnInit {
     ngOnInit() {
         // this.getDepList();
         this.getEmpInDep();
-
+        this.getEmpList();
     }
 
 }
