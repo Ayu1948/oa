@@ -18,6 +18,7 @@ import { TeamDepartmentComponent } from './team/team-department/team-department.
 import { TeamEmployeeComponent } from './team/team-employee/team-employee.component';
 import { AttenceRecordComponent } from './attence/attence-record/attence-record.component';
 import { TeamService } from './team/team.service';
+import { AttenceCalendarComponent } from './attence/attence-calendar/attence-calendar.component';
 
 
 registerLocaleData(zh);
@@ -30,7 +31,8 @@ registerLocaleData(zh);
     MessagesComponent,
     TeamDepartmentComponent,
     TeamEmployeeComponent,
-    AttenceRecordComponent
+    AttenceRecordComponent,
+    AttenceCalendarComponent
   ],
   imports: [
     BrowserModule,

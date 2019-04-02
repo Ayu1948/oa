@@ -13,6 +13,7 @@
             <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'" [nzCollapsedWidth]="0"
                 [nzZeroTrigger]="zeroTrigger">
                 <div class="slide-top">
+                    <p>签到考勤</p>
                     <ul>
                         <li>
                             <div>
@@ -39,6 +40,7 @@
                             </div>
                         </li>
                     </ul>
+                    <p>目录</p>
                 </div>
                 <ul class="left-nav" nz-menu [nzMode]="'inline'" nzTheme='dark' [nzInlineCollapsed]="isCollapsed">
                     <li nz-submenu nz-tooltip nzPlacement="right">
@@ -71,7 +73,7 @@
                         </span>
                         <ul>
                             <li nz-menu-item><a routerLink="/attence-record">申请记录</a></li>
-                            <li nz-menu-item>Option 10</li>
+                            <li nz-menu-item><a routerLink="/attence-calendar">考勤日历</a></li>
                             <li nz-menu-item>Option 11</li>
                         </ul>
                     </li>
@@ -86,9 +88,7 @@
                             </nz-breadcrumb>
                         </div>
                         <div class="content-box">
-                            <!-- <app-seal></app-seal> -->
                             <router-outlet></router-outlet>
-                            <!-- <app-messages></app-messages> -->
                         </div>
                     </div>
                 </nz-content>

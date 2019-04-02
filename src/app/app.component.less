@@ -6,10 +6,12 @@
 .slide-top {
     width: 100%; // height: 50px;
     background: rgba(255, 255, 255, .2);
-    padding: 30px 17px 25px;
+    padding: 30px 17px 5px;
+    p {
+        color: rgba(255, 255, 255, .65);
+    }
     ul {
         padding: 0;
-        margin: 0;
         line-height: 1;
         font-size: 14px;
         li {
@@ -48,16 +50,20 @@
     }
 }
 
-.content-wrapper {
-    margin: 24px 16px 0;
-    .content-breadcrumb {
-        padding-left: 10px;
-    }
-    .content-box {
-        padding: 24px;
-        background: #fff;
-        min-height: 360px;
-        margin-top: 24px;
+nz-content {
+    overflow: scroll;
+    padding-bottom: 5px;
+    .content-wrapper {
+        margin: 24px 16px 0;
+        .content-breadcrumb {
+            padding-left: 10px;
+        }
+        .content-box {
+            padding: 24px;
+            background: #fff;
+            min-height: 360px;
+            margin-top: 24px;
+        }
     }
 }
 

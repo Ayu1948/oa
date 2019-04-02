@@ -1,0 +1,73 @@
+<div class="attence-calendar">
+    <nz-layout>
+        <nz-sider>
+            <div class="logo">
+                <p>当前员工</p>
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                    <input type="text" nz-input placeholder="input search text">
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                    <button nz-button nzType="primary" nzSearch><i nz-icon type="search"></i></button>
+                </ng-template>
+            </div>
+            <ul class="nav-ul" nz-menu [nzMode]="'inline'">
+                <li nz-submenu *ngFor="let item of empInDepList">
+                    <span title>
+                        <i nz-icon type="file"></i>
+                        <span class="nav-text">{{item.name}}</span>
+                    </span>
+                    <ul>
+                        <li nz-menu-item *ngFor="let item2 of item.emp">
+                            <a (click)="getEmpId(item2.id)" routerLink="/attence-calendar/{{item2.id}}">
+                                <nz-avatar [nzText]="item2.id" nzSize="small"
+                                    [ngStyle]="{'background-color': '#40a9ff'}">
+                                </nz-avatar>
+                                {{item2.name}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout class="content-layout">
+            <nz-content>
+                <nz-calendar (nzSelectChange)="getM($event)" (nzPanelChange)="getMonthData($event)">
+                    <ul *nzDateCell="let date" class="events">
+                        <ng-container [ngSwitch]="date.getDate()">
+                            <div *ngFor="let v1 of dataMap[nowM]; index as i">
+                                <div *ngIf="v1">
+                                    <ng-container *ngSwitchCase="i">
+                                        <li *ngFor="let v2 of v1">
+                                            <nz-badge [nzStatus]="v2.type" [nzText]="v2.content"></nz-badge>
+                                        </li>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ul>
+                    <ng-container *nzMonthCell="let month">
+                        <div *ngIf="monthData" class="notes-month">
+                            <!-- <div *ngFor="let v of monthData"> -->
+                                <section>出差：{{ monthData[0] }}</section>
+                                <section>请假：{{ monthData[1] }}</section>
+                                <section>加班：{{ monthData[2] }}</section>
+                                <section>外勤：{{ monthData[3] }}</section>
+                            <!-- </div> -->
+                            <!-- <div *ngFor="let v1 of dataMap[nowM]; index as i">
+                                <div *ngIf="v1">
+                                    <ng-container *ngSwitchCase="i">
+                                        <li *ngFor="let v2 of v1">
+                                            <nz-badge [nzStatus]="v2.type" [nzText]="v2.content"></nz-badge>
+                                        </li>
+                                    </ng-container>
+                                </div>
+                            </div> -->
+                            <span>Backlog number</span>
+                        </div>
+                    </ng-container>
+                </nz-calendar>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+
+</div>

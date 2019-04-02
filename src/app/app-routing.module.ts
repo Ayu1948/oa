@@ -5,6 +5,7 @@ import { SealRecordComponent } from './seal/seal-record/seal-record.component';
 import { TeamDepartmentComponent } from './team/team-department/team-department.component';
 import { TeamEmployeeComponent } from './team/team-employee/team-employee.component';
 import { AttenceRecordComponent } from './attence/attence-record/attence-record.component';
+import { AttenceCalendarComponent } from './attence/attence-calendar/attence-calendar.component';
 
 const routes: Routes = [
     {
@@ -36,6 +37,12 @@ const routes: Routes = [
         component: AttenceRecordComponent,
         data: {
             breadcrumb: '/ attence-record'
+        }
+    }, {
+        path: 'attence-calendar',
+        component: AttenceCalendarComponent,
+        data: {
+            breadcrumb: '/ attence-calendar'
         }
     }
 ];

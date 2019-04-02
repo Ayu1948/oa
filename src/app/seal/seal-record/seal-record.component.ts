@@ -118,10 +118,12 @@ export class SealRecordComponent implements OnInit {
     }
     updateEditCache(): void {
         this.sealList.forEach(item => {
+            console.log(item);
             this.editCache[item.id] = {
                 edit: false,
                 data: { ...item }
             };
+            console.log(this.editCache);
         });
     }
 
