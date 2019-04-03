@@ -14,7 +14,8 @@ export class AttenceCalendarComponent implements OnInit {
     attenceList: Attence[];
     empInDepList: EmpInDep[];
     dataMap = [];
-    monthData;
+    monthMap = [];
+    badgeC = { 'background-color': '#40a9ff' };
     nowM = this.datePipe.transform(new Date(), 'M');
     listDataMap = {
         eight: [
@@ -36,7 +37,7 @@ export class AttenceCalendarComponent implements OnInit {
         ]
     };
 
-    getMonthData(e) {
+    getMonthMap(e) {
         if (e.mode === "year") {
             let cc = 0, qj = 0, jb = 0, wq = 0,
                 a = [];
@@ -58,36 +59,13 @@ export class AttenceCalendarComponent implements OnInit {
                 }
 
             }
-            return a;
+            this.monthMap = a;
         }
-        // for (const item of this.dataMap) {
-        //     console.log(item)
-        //     break
-        // }
-        // console.log(1)
-        // let cc = 0, qj = 0, jb = 0, wq = 0,
-        //     a = [];
-        // for (const index in this.dataMap) {
-        //     let m: number;
-        //     m = date.getMonth() + 1;
-        //     if (m === Number(index)) {
-        //         this.dataMap[m].forEach(day => {
-        //             day.forEach(d => {
-        //                 if (d.content === '出差') cc++;
-        //                 else if (d.content === '请假') qj++;
-        //                 else if (d.content === '加班') jb++;
-        //                 else wq++;
-        //             })
-
-        //         });
-        //         a[m] = [];
-        //         a[m] = [cc, qj, jb, wq];
-        //         cc = 0, qj = 0, jb = 0, wq = 0;
-        //         console.log(a)
-        //     }
-        // }
-        // return a;
-
+    }
+    getMonthData(date: Date): any | null {
+        const m = date.getMonth()+1;
+        if (this.monthMap[m]) return this.monthMap[m];
+        return null;
     }
     // 获取数据
     getAttenceList(): void {

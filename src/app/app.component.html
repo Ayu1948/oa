@@ -2,12 +2,44 @@
 <div id="box">
     <nz-layout>
         <nz-header>
-            <div class="logo"></div>
-            <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
+            <div class="logo"><b>LOGO</b></div>
+            <!-- <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
                 <li nz-menu-item>nav 1</li>
                 <li nz-menu-item>nav 2</li>
                 <li nz-menu-item>nav 3</li>
-            </ul>
+            </ul> -->
+            <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input type="text" nz-input placeholder="input search text" />
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+                <i nz-icon type="search"></i>
+            </ng-template>
+            <div class="btn-box">
+                <button nz-button nzType="default"><i nz-icon nzType="bell" nzTheme="fill"></i>Message</button>
+                <button nz-button nzType="default"><i nz-icon nzType="mail" nzTheme="fill"></i>Email</button>
+                <button nz-button nzType="default"><i nz-icon nzType="schedule" nzTheme="fill"></i>Work</button>
+            </div>
+            <div class="user-box">
+                <nz-avatar nzText="小明" nzSize="large" [ngStyle]="badgeC"></nz-avatar>
+                <b>XiaoMing</b>
+                <nz-button-group>
+                    <button nz-button nzType="default" *ngIf="signId; else signTpl" (click)="sign()">
+                        <i nz-icon type="close"></i>未签到
+                    </button>
+                    <ng-template #signTpl>
+                        <button nz-button nzType="primary">
+                            <i nz-icon type="check"></i>已签到
+                        </button>
+                    </ng-template>
+                    <button nz-button nz-popover nzType="primary" nzPlacement="bottomRight" [nzContent]="listTpl">
+                        <i nz-icon nzType="setting"></i>
+                    </button>
+                    <ng-template #listTpl class="setting">
+                        <p><a>设置</a></p>
+                        <p><a>退出登陆</a></p>
+                    </ng-template>
+                </nz-button-group>
+            </div>
         </nz-header>
         <nz-layout>
             <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'" [nzCollapsedWidth]="0"

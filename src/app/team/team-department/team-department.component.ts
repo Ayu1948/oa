@@ -72,7 +72,9 @@ export class TeamDepartmentComponent implements OnInit {
         this.isVisible = false;
     }
     resetForm(e: MouseEvent, type: string): void {
-        e.preventDefault();
+        if (e !== undefined) {
+            e.preventDefault();
+        }
         let flag = false;
         if (type === 'edit') {
             flag = true;
@@ -99,10 +101,12 @@ export class TeamDepartmentComponent implements OnInit {
     depNameAsyncValidator = (control: FormControl) => Observable.create((observer: Observer<ValidationErrors>) => {
         setTimeout(() => {
             var repFlag = false;
-            this.empInDepList.forEach(item => {
-                if (item.name === control.value)
-                    repFlag = true;
-            });
+            if (this.depNow === null) {
+                this.empInDepList.forEach(item => {
+                    if (item.name === control.value)
+                        repFlag = true;
+                });
+            }
             if (repFlag) {
                 observer.next({ error: true, duplicated: true });
             } else {
@@ -147,6 +151,28 @@ export class TeamDepartmentComponent implements OnInit {
             value.total = empText.length;
             this.addDep(value);
             this.resetForm($event, 'add');
+        } else {
+            let changeFlag = false;
+            for (const key in this.depNow) {
+                if (key !== 'emp') {
+                    if (this.depNow[key] !== value[key]) {
+                        changeFlag = true;
+                    }
+                } else {
+                    let arr = [];
+                    this.depNow.emp.forEach(dep => {
+                        arr.push(dep.department);
+                    })
+                    if (arr.length === value.emp.length) {
+                        for (let i = 0; i < arr.length; i++) {
+                            // if (arr[i] !== value.emp[i]) {
+
+                            // }
+                    }
+                    }
+
+                }
+            }
         }
         console.log(value);
     }
@@ -155,7 +181,6 @@ export class TeamDepartmentComponent implements OnInit {
         this.empInDepList = [...this.empInDepList, data];
     }
     delDep(id) {
-        // 撤销申请
         this.empInDepList.forEach(element => {
             if (element.id === id) {
                 this.empInDepList = this.empInDepList.filter(d => d.id !== id);
@@ -165,7 +190,10 @@ export class TeamDepartmentComponent implements OnInit {
     }
     showAddModal(data): void {
         this.empInDepNow = [];
+        let e: MouseEvent;
         if (!data) {
+            this.depNow = null;
+            this.resetForm(e, 'add');
             this.isAdd = true;
             this.addTitle = '添加部门';
         } else {
@@ -187,6 +215,7 @@ export class TeamDepartmentComponent implements OnInit {
         if (data) {
             console.log(1)
             this.empInDepNow = [...this.empInDepNow, data];
+            console.log(this.empInDepNow)
         }
     }
     handleAddOk(): void {

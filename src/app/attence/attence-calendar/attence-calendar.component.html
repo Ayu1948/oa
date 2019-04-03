@@ -19,8 +19,7 @@
                     <ul>
                         <li nz-menu-item *ngFor="let item2 of item.emp">
                             <a (click)="getEmpId(item2.id)" routerLink="/attence-calendar/{{item2.id}}">
-                                <nz-avatar [nzText]="item2.id" nzSize="small"
-                                    [ngStyle]="{'background-color': '#40a9ff'}">
+                                <nz-avatar [nzText]="item2.id" nzSize="small" [ngStyle]="badgeC">
                                 </nz-avatar>
                                 {{item2.name}}
                             </a>
@@ -31,14 +30,22 @@
         </nz-sider>
         <nz-layout class="content-layout">
             <nz-content>
-                <nz-calendar (nzSelectChange)="getM($event)" (nzPanelChange)="getMonthData($event)">
+                <div class="tool">
+                    <nz-badge nzStatus="success" nzText="外勤"></nz-badge>
+                    <nz-badge nzStatus="warning" nzText="加班"></nz-badge>
+                    <nz-badge nzStatus="error" nzText="出差"></nz-badge>
+                    <nz-badge nzStatus="default" nzText="请假" [nzStyle]="badgeC"></nz-badge>
+                </div>
+                <nz-calendar (nzSelectChange)="getM($event)" (nzPanelChange)="getMonthMap($event)">
                     <ul *nzDateCell="let date" class="events">
                         <ng-container [ngSwitch]="date.getDate()">
                             <div *ngFor="let v1 of dataMap[nowM]; index as i">
                                 <div *ngIf="v1">
                                     <ng-container *ngSwitchCase="i">
                                         <li *ngFor="let v2 of v1">
-                                            <nz-badge [nzStatus]="v2.type" [nzText]="v2.content"></nz-badge>
+                                            <nz-badge *ngIf="v2.type == 'default'" [nzStatus]="v2.type"
+                                                [nzText]="v2.content" [nzStyle]="badgeC"></nz-badge>
+                                            <nz-badge *ngIf="v2.type !== 'default'" [nzStatus]="v2.type" [nzText]="v2.content"></nz-badge>
                                         </li>
                                     </ng-container>
                                 </div>
@@ -46,23 +53,11 @@
                         </ng-container>
                     </ul>
                     <ng-container *nzMonthCell="let month">
-                        <div *ngIf="monthData" class="notes-month">
-                            <!-- <div *ngFor="let v of monthData"> -->
-                                <section>出差：{{ monthData[0] }}</section>
-                                <section>请假：{{ monthData[1] }}</section>
-                                <section>加班：{{ monthData[2] }}</section>
-                                <section>外勤：{{ monthData[3] }}</section>
-                            <!-- </div> -->
-                            <!-- <div *ngFor="let v1 of dataMap[nowM]; index as i">
-                                <div *ngIf="v1">
-                                    <ng-container *ngSwitchCase="i">
-                                        <li *ngFor="let v2 of v1">
-                                            <nz-badge [nzStatus]="v2.type" [nzText]="v2.content"></nz-badge>
-                                        </li>
-                                    </ng-container>
-                                </div>
-                            </div> -->
-                            <span>Backlog number</span>
+                        <div *ngIf="getMonthData(month) as monthData" class="notes-month">
+                            <section>出差：{{ monthData[0] }}</section>
+                            <section>请假：{{ monthData[1] }}</section>
+                            <section>加班：{{ monthData[2] }}</section>
+                            <section>外勤：{{ monthData[3] }}</section>
                         </div>
                     </ng-container>
                 </nz-calendar>
