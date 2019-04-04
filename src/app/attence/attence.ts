@@ -12,3 +12,10 @@ export class Attence {
     status: any;        // 申请状态
     description: string;    // 申请原因
 }
+
+export class Sign {
+    id: number;
+    time: string;
+    emp: string;
+    status: string;
+}

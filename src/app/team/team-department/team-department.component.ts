@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamService } from '../team.service';
-import { EmpInDep, Employee } from '../team';
+import { EmpInDep, Employee, Department } from '../team';
 import {
     FormBuilder,
     FormControl,
@@ -20,6 +20,7 @@ export class TeamDepartmentComponent implements OnInit {
 
     empInDepList: EmpInDep[] = [];
     eName: string;
+    depList: Department[] = [];
     empList: Employee[] = [];
     emp: Employee[] = [];
     isVisible = false;
@@ -36,10 +37,10 @@ export class TeamDepartmentComponent implements OnInit {
             .subscribe((empList: Employee[]) => this.empList = empList);
     }
 
-    // getDepList(): void {
-    //     this.teamService.getDepList()
-    //         .subscribe((depList: Department[]) => {this.depList = depList; console.log(depList)});
-    // }
+    getDepList(): void {
+        this.teamService.getDepList()
+            .subscribe((depList: Department[]) => this.depList = depList);
+    }
     getEmpInDep(): void {
         this.teamService.getEmpInDep()
             .subscribe((empInDepList: EmpInDep[]) => this.empInDepList = empInDepList);
@@ -154,24 +155,66 @@ export class TeamDepartmentComponent implements OnInit {
         } else {
             let changeFlag = false;
             for (const key in this.depNow) {
-                if (key !== 'emp') {
-                    if (this.depNow[key] !== value[key]) {
-                        changeFlag = true;
+                if (key !== 'id' && key !== 'total' && key !== 'picId') {
+                    if (key !== 'emp') {
+                        if (this.depNow[key] !== value[key]) {
+                            changeFlag = true;
+                        }
+                    } else {
+                        let arr = [],
+                            count = 0;
+                        this.depNow.emp.forEach(emp => {
+                            arr.push(emp.name);
+                        })
+                        if (arr.length === value.emp.length) {
+                            for (let i = 0; i < arr.length; i++) {
+                                value.emp.forEach(emp => {
+                                    if (arr[i] === emp) {
+                                        count++;
+                                    }
+                                });
+                            }
+                            if (count !== arr.length) {
+                                changeFlag = true;
+                            }
+                        } else {
+                            changeFlag = true;
+                        }
                     }
-                } else {
-                    let arr = [];
-                    this.depNow.emp.forEach(dep => {
-                        arr.push(dep.department);
-                    })
-                    if (arr.length === value.emp.length) {
-                        for (let i = 0; i < arr.length; i++) {
-                            // if (arr[i] !== value.emp[i]) {
-
-                            // }
-                    }
-                    }
-
                 }
+            }
+            if (changeFlag) {
+                this.empInDepList.forEach(item => {
+                    if (item.id === this.depNow.id) {
+                        for (const key in item) {
+                            if (key !== 'id') {
+                                if (key === 'total') {
+                                    item[key] = value.emp.length;
+                                } else if (key === 'picId' || key === 'emp') {
+                                    let empText = [];
+                                    this.empList.forEach(emp => {
+                                        if (value.pic === emp.name) {
+                                            item['picId'] = emp.id;
+                                        }
+                                        value.emp.forEach(vemp => {
+                                            if (vemp === emp.name) {
+                                                empText = [...empText, emp];
+                                            }
+                                        });
+                                    });
+                                    item['emp'] = empText;
+                                } else {
+                                    item[key] = value[key];
+                                }
+                            }
+                        }
+                    }
+                })
+                this.nzMessageService.create('success', '提交成功');
+                this.handleAddOk();
+            } else {
+                this.nzMessageService.info('没有改动，编辑提交失败');
+                this.handleAddCancel();
             }
         }
         console.log(value);
@@ -218,6 +261,15 @@ export class TeamDepartmentComponent implements OnInit {
             console.log(this.empInDepNow)
         }
     }
+    getEmpForDep(data) {
+        let empText = [];
+        this.empList.forEach(emp => {
+            if (emp.department === data) {
+                empText = [...empText, emp];
+            }
+        });
+        return empText;
+    }
     handleAddOk(): void {
         console.log('Button ok clicked!');
         this.isAddVisble = false;
@@ -241,7 +293,7 @@ export class TeamDepartmentComponent implements OnInit {
         });
     }
     ngOnInit() {
-        // this.getDepList();
+        this.getDepList();
         this.getEmpInDep();
         this.getEmpList();
     }

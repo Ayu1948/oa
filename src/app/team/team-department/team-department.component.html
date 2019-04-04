@@ -26,7 +26,7 @@
                     <span (click)="showAddModal(data.name)">编辑</span>
                 </ng-template>
                 <ng-template #actionEllipsis>
-                        <!-- <i nz-icon type="ellipsis"></i> -->
+                    <!-- <i nz-icon type="ellipsis"></i> -->
                     <span nz-popconfirm nzTitle="确认删除?" (nzOnConfirm)="delDep(data.id)" nzPlacement="bottom">删除</span>
                 </ng-template>
             </div>
@@ -102,8 +102,9 @@
                 <nz-form-label nzRequired>部门成员</nz-form-label>
                 <nz-form-control>
                     <nz-select formControlName="emp" [ngModel]="empInDepNow" [nzSize]="size" nzMode="tags">
-                        <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
-                            <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                        <nz-option-group *ngFor="let dep of depList" [nzLabel]="dep.name">
+                            <nz-option *ngFor="let emp of getEmpForDep(dep.name)" [nzValue]="emp.name"
+                                [nzLabel]="emp.name">
                             </nz-option>
                         </nz-option-group>
                     </nz-select>
@@ -165,8 +166,8 @@
                 <nz-form-label nzRequired>部门成员</nz-form-label>
                 <nz-form-control>
                     <nz-select formControlName="emp" [ngModel]="empInDepNow" [nzSize]="size" nzMode="tags">
-                        <nz-option-group *ngFor="let data of empInDepList" [nzLabel]="data.name">
-                            <nz-option *ngFor="let item of data.emp" [nzValue]="item.name" [nzLabel]="item.name">
+                        <nz-option-group *ngFor="let dep of depList" [nzLabel]="dep.name">
+                            <nz-option *ngFor="let emp of getEmpForDep(dep.name)" [nzValue]="emp.name" [nzLabel]="emp.name">
                             </nz-option>
                         </nz-option-group>
                     </nz-select>

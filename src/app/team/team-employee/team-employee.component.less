@@ -2,9 +2,24 @@
     // height: 32px;
     // background: rgba(255, 255, 255, .2);
     margin: 16px;
+    position: relative;
     .addEmp {
         width: 100%;
         margin-bottom: 10px;
+    }
+    nz-select {
+        width: 100%;
+        ::ng-deep .ant-select-selection {
+            padding-right: 32px; // border-top-right-radius: 0;
+            // border-bottom-right-radius: 0;
+        }
+    }
+    .searchBtn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0; // margin-left: -32px;
+        // float: right;
+        position: absolute;
+        right: 0;
     }
 }
 

@@ -21,6 +21,7 @@ import { TeamService } from './team/team.service';
 import { AttenceCalendarComponent } from './attence/attence-calendar/attence-calendar.component';
 import { IconDefinition } from '@ant-design/icons-angular';
 import { SettingOutline, MailFill, BellFill, ScheduleFill } from '@ant-design/icons-angular/icons';
+import { AttenceSignComponent } from './attence/attence-sign/attence-sign.component';
 
 const icons: IconDefinition[] = [SettingOutline, MailFill, BellFill, ScheduleFill];
 
@@ -35,7 +36,8 @@ registerLocaleData(zh);
         TeamDepartmentComponent,
         TeamEmployeeComponent,
         AttenceRecordComponent,
-        AttenceCalendarComponent
+        AttenceCalendarComponent,
+        AttenceSignComponent
     ],
     imports: [
         BrowserModule,

@@ -24,7 +24,30 @@ export class TeamEmployeeComponent implements OnInit {
     empInDepList: EmpInDep[];
     @Input() emp: Employee = null;
     sexValue = '男';
+
+    // 搜索框
+    selectedValue = null;
+    listOfOption: Array<{ value: number; text: string }> = [];
+    nzFilterOption = () => true;
+
     // constructor(private teamService: TeamService) { }
+    
+    search(value: string): void {
+        // 搜索框
+        const listOfOption: Array<{ value: number; text: string }> = [];
+        this.empList.forEach(item => {
+            if (item.name.indexOf(value) !== -1) {
+                listOfOption.push({
+                    value: item.id,
+                    text: item.name
+                });
+            }
+        });
+        this.listOfOption = listOfOption;
+    }
+    searchBtn(data) {
+        console.log(data)
+    }
 
     getEmpList(): void {
         this.teamService.getEmpList()

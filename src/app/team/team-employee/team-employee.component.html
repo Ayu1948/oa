@@ -3,12 +3,14 @@
         <nz-sider>
             <div class="logo">
                 <button nz-button nzType="primary" class="addEmp" routerLink="/team-employee">新增员工</button>
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                    <input type="text" nz-input placeholder="input search text">
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                    <button nz-button nzType="primary" nzSearch><i nz-icon type="search"></i></button>
-                </ng-template>
+                <nz-select nzShowSearch nzServerSearch nzPlaceHolder="搜索员工"
+                    [nzFilterOption]="nzFilterOption" [(ngModel)]="selectedValue" [nzShowArrow]="false"
+                    (nzOnSearch)="search($event)">
+                    <nz-option *ngFor="let o of listOfOption" [nzLabel]="o.text" [nzValue]="o.value"> </nz-option>
+                </nz-select>
+                <button nz-button nzType="primary" class="searchBtn" routerLink="/team-employee/{{selectedValue}}">
+                    <i nz-icon type="search"></i>
+                </button>
             </div>
             <ul class="nav-ul" nz-menu [nzMode]="'inline'">
                 <li nz-submenu *ngFor="let item of empInDepList">

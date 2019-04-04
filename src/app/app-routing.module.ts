@@ -6,6 +6,7 @@ import { TeamDepartmentComponent } from './team/team-department/team-department.
 import { TeamEmployeeComponent } from './team/team-employee/team-employee.component';
 import { AttenceRecordComponent } from './attence/attence-record/attence-record.component';
 import { AttenceCalendarComponent } from './attence/attence-calendar/attence-calendar.component';
+import { AttenceSignComponent } from './attence/attence-sign/attence-sign.component';
 
 const routes: Routes = [
     {
@@ -43,6 +44,12 @@ const routes: Routes = [
         component: AttenceCalendarComponent,
         data: {
             breadcrumb: '/ attence-calendar'
+        }
+    }, {
+        path: 'attence-sign',
+        component: AttenceSignComponent,
+        data: {
+            breadcrumb: '/ attence-sign'
         }
     }
 ];
