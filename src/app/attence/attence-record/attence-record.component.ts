@@ -35,6 +35,8 @@ export class AttenceRecordComponent implements OnInit {
     isVisible = false;
     appLtype = false;
     dateNow = new Date();
+    selectTime: Date | Date[] = null;
+    selectedValue = '1';
 
     @ViewChild('inputElement') inputElement: ElementRef;
 
@@ -227,7 +229,7 @@ export class AttenceRecordComponent implements OnInit {
         setTimeout(() => {
             this.updateEditCache();
             console.log(this.attenceList);
-        }, 1000);
+        }, 100);
     }
 
 }

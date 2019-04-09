@@ -1,7 +1,37 @@
 .table-operations {
     margin-bottom: 16px;
-    &>button {
-        margin-right: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .btn-box {
+        display: inline-block;
+        button {
+            margin-right: 8px;
+        }
+    }
+    .timeTh {
+        display: inline-block;
+        ::ng-deep .ant-table-column-sorters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nz-select {
+            width: 72px;
+            ::ng-deep .ant-select-selection {
+                border-color: transparent;
+                background: transparent;
+                outline: none;
+                box-shadow: none;
+            }
+        }
+        nz-date-picker,
+        nz-month-picker {
+            width: 126px;
+        }
+        nz-range-picker {
+            width: 232px;
+        }
     }
 }
 

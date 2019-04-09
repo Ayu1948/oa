@@ -3,18 +3,13 @@
         <button nz-button (click)="sort('id','descend')">序号排序</button>
         <button nz-button (click)="resetFilters()">清除过滤</button>
         <button nz-button (click)="resetSortAndFilters()">清除过滤和排序</button>
-        <!-- <button nz-button nzType="primary" (click)="showModal()">提交申请</button> -->
     </div>
     <nz-table #nzTable [nzData]="signListDisplay" [nzPageSize]="5" [nzHideOnSinglePage]="true">
         <thead (nzSortChange)="sort($event)" nzSingleSort>
             <tr>
                 <th nzShowSort nzSortKey="id">序号</th>
-                <th
-                    nzShowFilter
-                    [nzFilters]="listOfDep"
-                    (nzFilterChange)="filter($event)"
-                >姓名</th>
-                <th nzWidth="45%" nzShowSort nzSortKey="time" [nzFilters]="timeTpl" class="timeTh">
+                <th nzShowFilter [nzFilters]="listOfDep" (nzFilterChange)="filter($event, listOfSearchStatus)">姓名</th>
+                <th nzWidth="45%" nzShowSort nzSortKey="time" class="timeTh">
                     签到时间
                     <div>
                         <nz-select [(ngModel)]="selectedValue">
@@ -22,21 +17,28 @@
                             <nz-option nzValue="2" nzLabel="几天"></nz-option>
                             <nz-option nzValue="3" nzLabel="一月"></nz-option>
                         </nz-select>
-                        <nz-date-picker *ngIf="selectedValue == '1'" [ngModel]="selectTime"
+                        <nz-date-picker *ngIf="selectedValue == '1'" [(ngModel)]="selectTime"
                             (ngModelChange)="onChange($event, 1)">
                         </nz-date-picker>
-                        <nz-range-picker *ngIf="selectedValue == '2'" [ngModel]="selectTime"
+                        <nz-range-picker *ngIf="selectedValue == '2'" [(ngModel)]="selectTime"
                             (ngModelChange)="onChange($event, 2)">
                         </nz-range-picker>
-                        <nz-month-picker *ngIf="selectedValue == '3'" [ngModel]="selectTime"
+                        <nz-month-picker *ngIf="selectedValue == '3'" [(ngModel)]="selectTime"
                             (ngModelChange)="onChange($event, 3)">
                         </nz-month-picker>
                     </div>
                 </th>
-                <th>签到状态</th>
+                <th nzShowFilter [(nzFilters)]="listOfStatus" (nzFilterChange)="filter(listOfSearchDep, $event)">签到状态
+                </th>
             </tr>
         </thead>
         <tbody>
+            <tr *ngIf="nowId">
+                <td>{{nowSign.id}}</td>
+                <td>{{nowSign.emp}}</td>
+                <td>{{nowSign.time}}</td>
+                <td>{{nowSign.status}}</td>
+            </tr>
             <ng-template ngFor let-data [ngForOf]="nzTable.data">
                 <tr>
                     <td>{{data.id}}</td>

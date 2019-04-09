@@ -4,6 +4,8 @@ import { Department, EmpInDep } from 'src/app/team/team';
 import { TeamService } from 'src/app/team/team.service';
 import { AttenceService } from '../attence.service';
 import { DatePipe } from '@angular/common';
+import { SignService } from '../sign.service';
+import { text } from '@angular/core/src/render3';
 
 
 @Component({
@@ -23,7 +25,11 @@ export class AttenceSignComponent implements OnInit {
     selectedValue = '1';
     listOfSearchTime: string[] = [];
     listOfSearchDep: string[] = [];
+    listOfSearchStatus: string[] = [];
+    listOfStatus = [{ text: '正常', value: '正常' }, { text: '迟到', value: '迟到' }];
     listOfDep = [];
+    nowSign: Sign;
+    nowId = false;
     sort(sort: { key: string; value: string }): void {
         this.sortName = sort.key;
         this.sortValue = sort.value;
@@ -49,14 +55,32 @@ export class AttenceSignComponent implements OnInit {
         console.log(this.listOfSearchTime)
         this.search();
     }
-    filter(data: string[]) {
-        this.listOfSearchDep = data;
+    filter(listOfSearchDep: string[], listOfSearchStatus: string[]) {
+        this.listOfSearchDep = listOfSearchDep;
+        this.listOfSearchStatus = listOfSearchStatus;
+        this.search();
+    }
+    resetFilters(): void {
+        this.listOfStatus = [{ text: '正常', value: '正常' }, { text: '迟到', value: '迟到' }];
+        this.getDepList();
+        this.listOfSearchTime = [];
+        this.listOfSearchDep = [];
+        this.listOfSearchStatus = [];
+        this.selectedValue = '1';
+        this.selectTime = null;
+        this.search();
+    }
+    resetSortAndFilters(): void {
+        this.sortName = null;
+        this.sortValue = null;
+        this.resetFilters();
         this.search();
     }
     search(): void {
         /** filter data **/
         const filterFunc = (item: Sign) => {
-            let flagTime = true, flagDep = false;
+            let flagTime = true, flagDep = false, flagStatus = true;
+            // 时间过滤
             if (this.listOfSearchTime.length) {
                 if (this.listOfSearchTime.length === 2) {
                     const date1 = Date.parse(this.listOfSearchTime[0]),
@@ -68,6 +92,7 @@ export class AttenceSignComponent implements OnInit {
                     flagTime = this.listOfSearchTime.some(time => item.time.indexOf(time) !== -1)
                 }
             }
+            // 员工的部门过滤
             if (this.listOfSearchDep.length) {
                 this.empInDepList.forEach(eList => {
                     this.listOfSearchDep.forEach(sDep => {
@@ -79,13 +104,17 @@ export class AttenceSignComponent implements OnInit {
                             })
                         }
                     });
-                    
+
                 })
             } else {
                 flagDep = true;
             }
             // let flagDep = (this.listOfSearchDep.length ? this.listOfSearchDep.some(name => item.name.indexOf(name) !== -1) : true);
-            return flagTime && flagDep;
+            // 签到状态过滤
+            if (this.listOfSearchStatus.length) {
+                flagStatus = this.listOfSearchStatus.some(status => item.status.indexOf(status) !== -1);
+            }
+            return flagTime && flagDep && flagStatus;
         }
         // const filterFunc = (item: Sign) =>
         //     (this.listOfSearchTime.length ? this.listOfSearchTime.some(time => item.time.indexOf(time) !== -1) : true);
@@ -127,6 +156,27 @@ export class AttenceSignComponent implements OnInit {
                 this.listOfDep = [...depText];
             });
     }
+    add() {
+        this.signService.changeEmitted$.subscribe(
+            text => {
+                const today = Date.parse(this.datePipe.transform(new Date(), 'yyyy-MM-dd 09:00:59'));
+                let status,
+                    id = this.signList[this.signList.length - 1].id + 1;
+                if (today < text) {
+                    status = "迟到";
+                } else {
+                    status = "正常";
+                }
+                this.nowSign = {
+                    id: id,
+                    emp: '员工111',
+                    time: this.datePipe.transform(text, 'yyyy-MM-dd HH:mm:ss'),
+                    status: status
+                }
+                this.nowId = true;
+            }
+        )
+    }
     getEmpInDep(): void {
         this.teamService.getEmpInDep()
             .subscribe(empInDepList => this.empInDepList = empInDepList);
@@ -134,13 +184,15 @@ export class AttenceSignComponent implements OnInit {
     constructor(
         private attenceService: AttenceService,
         private teamService: TeamService,
-        private datePipe: DatePipe
+        private datePipe: DatePipe,
+        private signService: SignService
     ) { }
 
     ngOnInit() {
         this.getSignList();
         this.getDepList();
         this.getEmpInDep();
+        this.add();
     }
 
 }
